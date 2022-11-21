@@ -9,7 +9,7 @@ class DataRepo {
       final operation = Amplify.API.query(
         request: GraphQLRequest(
             document: GraphQLQueries.listUsersQuery,
-            apiName: 'Default',
+            apiName: 'shiftmanager',
             variables: {
               "eq": userId,
             }),
@@ -34,7 +34,7 @@ class DataRepo {
       final operation = Amplify.API.mutate(
         request: GraphQLRequest(
           document: GraphQLMutation.createAvailabilityUserMutation,
-          apiName: 'Default',
+          apiName: 'shiftmanager',
           variables: {
             "userId": userId,
             "startTime": "${startTime.toIso8601String()}Z",

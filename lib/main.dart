@@ -26,6 +26,102 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Authenticator(
+      authenticatorBuilder: (BuildContext context, AuthenticatorState state) {
+        const padding =
+            EdgeInsets.only(left: 16, right: 16, top: 38, bottom: 28);
+        switch (state.currentStep) {
+          case AuthenticatorStep.signIn:
+            return Scaffold(
+              body: Padding(
+                padding: padding,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Insert Logo here
+                      Center(
+                        child: Image.asset(
+                          'assets/shift-logo.png',
+                          height: 150,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 25),
+                        child: Text(
+                          'Shift Manager',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SignInForm(),
+                    ],
+                  ),
+                ),
+              ),
+              persistentFooterButtons: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Don\'t have an account?'),
+                    TextButton(
+                      onPressed: () => state.changeStep(
+                        AuthenticatorStep.signUp,
+                      ),
+                      child: const Text('Sign Up'),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          case AuthenticatorStep.signUp:
+            return Scaffold(
+              body: Padding(
+                padding: padding,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                          'assets/shift-logo.png',
+                          height: 75,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 25, top: 5),
+                        child: Text(
+                          'Shift Manager',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      // Insert Logo here
+                      SignUpForm(),
+                    ],
+                  ),
+                ),
+              ),
+              persistentFooterButtons: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Already have an account?'),
+                    TextButton(
+                      onPressed: () => state.changeStep(
+                        AuthenticatorStep.signIn,
+                      ),
+                      child: const Text('Sign In'),
+                    ),
+                  ],
+                )
+              ],
+            );
+          default:
+            return null;
+        }
+      },
       child: MaterialApp(
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates,
@@ -49,7 +145,14 @@ class MyApp extends StatelessWidget {
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.all(10)),
+              textStyle: MaterialStateProperty.all(
+                const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                  const EdgeInsets.all(10)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),

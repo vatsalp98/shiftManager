@@ -17,6 +17,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Settings'),
       ),
       body: Column(
@@ -29,7 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: CustomStyles.screenTitleTextStyle,
           ),
           SizedBox(
-            height: 300,
+            height: 250,
             child: FutureBuilder(
               future: AuthRepo.fetchCustomUserAttributes(),
               builder: (context, snapshot) {
@@ -39,18 +40,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return ListView(
                     children: [
                       ListTile(
-                        title: Text(data['given_name']),
-                        subtitle: const Text('Given Name'),
+                        title: Text(
+                          data['given_name'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Given Name',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                       ListTile(
-                        title: Text(data['family_name']),
-                        subtitle: const Text('Family Name'),
+                        title: Text(
+                          data['family_name'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Family Name',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                       ListTile(
-                        title: Text(data['email']),
+                        title: Text(
+                          data['email'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
                         subtitle: data['email_verified'] == "true"
-                            ? const Text('Email Verified')
-                            : const Text('Unverified Email'),
+                            ? const Text(
+                                'Email Verified',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            : const Text(
+                                'Unverified Email',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                         trailing: data['email_verified'] == "true"
                             ? const Icon(
                                 Icons.check_circle_rounded,
@@ -69,8 +108,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: Text('Availability'),
-            trailing: Icon(Icons.keyboard_arrow_right_rounded),
+            title: const Text(
+              'Availability',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            trailing: const Icon(Icons.keyboard_arrow_right_rounded),
             onTap: () {
               Navigator.pushNamed(context, RoutesClass.availability);
             },

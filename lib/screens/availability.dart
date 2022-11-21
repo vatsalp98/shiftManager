@@ -1,8 +1,10 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:time_range_picker/time_range_picker.dart';
+import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
 
 class AvailabilityScreen extends StatefulWidget {
@@ -34,11 +36,11 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Availability'),
       ),
       body: Column(
@@ -50,13 +52,16 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
             padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(color: Colors.grey, blurRadius: 2, spreadRadius: 2),
+                ],
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.red.shade100.withOpacity(0.5),
+                color: Colors.red.shade100,
               ),
               child: TableCalendar(
                 focusedDay: _focusedDate,
                 firstDay: now,
-                lastDay: now.add(const Duration(days: 50)),
+                lastDay: now.add(const Duration(days: 21)),
                 selectedDayPredicate: ((day) => isSameDay(day, _focusedDate)),
                 onDaySelected: ((selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDate, selectedDay)) {
@@ -87,29 +92,75 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                   leftChevronVisible: true,
                   titleCentered: true,
                 ),
+                calendarStyle: CalendarStyle(
+                  todayDecoration: BoxDecoration(
+                    color: Colors.grey.shade500,
+                    shape: BoxShape.circle,
+                  ),
+                  outsideDaysVisible: false,
+                  selectedTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.red.shade400,
+                    shape: BoxShape.circle,
+                  ),
+                  markerDecoration: const BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                  todayTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
-            child: const Text(
+            child: Text(
               'Set your Availability',
               style: CustomStyles.sectionTitleTextStyle,
             ),
           ),
           ListTile(
-            title: Text(dateFormat.format(_selectedDate)),
-            subtitle: Text('Date'),
+            title: Text(
+              dateFormat.format(_selectedDate),
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+            ),
+            subtitle: const Text(
+              'Date',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
           ListTile(
-            title: Text(availability),
-            subtitle: Text('Start Time'),
+            title: Text(
+              availability,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            subtitle: const Text(
+              'Start Time',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             trailing: IconButton(
               onPressed: () async {
                 TimeRange result = await showTimeRangePicker(context: context);
                 setState(() {
                   availability =
-                  "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
+                      "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
                   startTime = DateTime(now.year, now.month, now.day,
                       result.startTime.hour, result.startTime.minute);
                   endTime = DateTime(now.year, now.month, now.day,
@@ -122,8 +173,20 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
               ),
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.only(top: 20),
+          ),
           Center(
-            child: ElevatedButton(onPressed: () {}, child: const Text('Save')),
+            child: ElevatedButton(
+                onPressed: () async {
+                  var user = await Amplify.Auth.getCurrentUser();
+                  var response = await DataRepo().createAvailabilityUser(
+                    user.userId, startTime, endTime, _selectedDate
+                  );
+                  if(response['createAvailabilityUser']['id']){
+                    Navigator.pop(context);
+                  }
+                }, child: const Text('Save')),
           ),
         ],
       ),
