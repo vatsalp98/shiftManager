@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-shiftmanager-dev-231554-authRole",
+      "UnauthRoleArn": "arn:aws:iam::629789985243:role/amplify-shiftmanager-dev-231554-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::629789985243:role/amplify-shiftmanager-dev-231554-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-shiftmanager-dev-231554-deployment",
+      "UnauthRoleName": "amplify-shiftmanager-dev-231554-unauthRole",
+      "StackName": "amplify-shiftmanager-dev-231554",
+      "StackId": "arn:aws:cloudformation:ca-central-1:629789985243:stack/amplify-shiftmanager-dev-231554/57b24a00-696c-11ed-ae8e-02b919c3d7e0",
+      "AmplifyAppId": "d3vtjf12wi3ch9"
+    },
+    "categories": {
+      "auth": {
+        "shiftmanagerauth": {}
+      },
+      "api": {
+        "shiftmanager": {}
+      }
+    }
+  }
+}

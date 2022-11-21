@@ -1,0 +1,54 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type User @model @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: public, operations: [read, create, update] },
+    { allow: private, operations: [read, create, update, delete] }
+  ]) {
+    id: ID!
+    given_name: String!
+    last_name: String!
+    email: String!
+    employeeId: String
+}
+
+type Shift @model @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: public, operations: [read, create, update] },
+    { allow: private, operations: [read, create, update, delete] }
+  ]) {
+    id: ID!
+    date: AWSDateTime!
+    startTime: AWSDateTime!
+    endTime: AWSDateTime!
+    isCancelled: Boolean!
+    isRemote: Boolean!
+    isNoShow: Boolean!
+}
+
+type ShiftUser @model @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: public, operations: [read, create, update] },
+    { allow: private, operations: [read, create, update, delete] }
+  ]) {
+    id: ID!
+    userId: ID!
+    shiftId: ID!
+    user: User @hasOne(fields: ["userId"])
+    shift: Shift @hasOne(fields: ["shiftId"])
+}
+
+type AvailabilityUser @model @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: public, operations: [read, create, update] },
+    { allow: private, operations: [read, create, update, delete] }
+  ]) {
+    id: ID!
+    date: AWSDateTime!
+    startTime: AWSDateTime!
+    endTime: AWSDateTime!
+    userId: ID!
+    user: User @hasOne(fields: ["userId"])
+}
