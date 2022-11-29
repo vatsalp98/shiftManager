@@ -18,7 +18,6 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
   late CalendarFormat tableFormat;
   final now = DateTime.now();
   DateTime _selectedDate = DateTime.now();
-  List _events = [];
   DateTime _focusedDate = DateTime.now();
   var dateFormat = DateFormat('EEEE dd-MM-yyyy');
   var availability = 'Time Interval';
@@ -28,17 +27,17 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
   @override
   void initState() {
     tableFormat = CalendarFormat.twoWeeks;
-    fetchEvents();
     super.initState();
   }
 
   fetchEvents() async {
     final user = await Amplify.Auth.getCurrentUser();
-    final response = await DataRepo().listAvailabilityUser(user.userId);
+    final response = await DataRepo().listAvailabilityUser(user.userId, DataRepo().awsDateFormat.format(_selectedDate));
     if (!response['errorsExists']) {
       return response;
     }
   }
+
 
   @override
   void dispose() {
@@ -52,222 +51,224 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
         centerTitle: true,
         title: const Text('Availability'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Container(
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(color: Colors.grey, blurRadius: 2, spreadRadius: 2),
-                ],
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.red.shade100,
-              ),
-              child: TableCalendar(
-                focusedDay: _focusedDate,
-                firstDay: now,
-                lastDay: now.add(const Duration(days: 21)),
-                selectedDayPredicate: ((day) => isSameDay(day, _focusedDate)),
-                onDaySelected: ((selectedDay, focusedDay) {
-                  if (!isSameDay(_selectedDate, selectedDay)) {
-                    setState(() {
-                      _selectedDate = selectedDay;
-                      _focusedDate = focusedDay;
-                      //_events = _getEventsForDay(selectedDay);
-                    });
-                  }
-                }),
-                calendarFormat: tableFormat,
-                onFormatChanged: ((format) {
-                  tableFormat = format;
-                }),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  weekendStyle: TextStyle(
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.w500,
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(color: Colors.grey, blurRadius: 2, spreadRadius: 2),
+                  ],
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.red.shade100,
                 ),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleTextStyle: CustomStyles.screenTitleTextStyle,
-                  leftChevronVisible: true,
-                  titleCentered: true,
-                ),
-                calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                    color: Colors.grey.shade500,
-                    shape: BoxShape.circle,
+                child: TableCalendar(
+                  focusedDay: _focusedDate,
+                  firstDay: now,
+                  lastDay: now.add(const Duration(days: 21)),
+                  selectedDayPredicate: ((day) => isSameDay(day, _focusedDate)),
+                  onDaySelected: ((selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDate, selectedDay)) {
+                      setState(() {
+                        _selectedDate = selectedDay;
+                        _focusedDate = focusedDay;
+                        //_events = _getEventsForDay(selectedDay);
+                      });
+                    }
+                  }),
+                  calendarFormat: tableFormat,
+                  onFormatChanged: ((format) {
+                    tableFormat = format;
+                  }),
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    weekdayStyle: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    weekendStyle: TextStyle(
+                      color: Colors.grey.shade800,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  outsideDaysVisible: false,
-                  selectedTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleTextStyle: CustomStyles.screenTitleTextStyle,
+                    leftChevronVisible: true,
+                    titleCentered: true,
                   ),
-                  selectedDecoration: BoxDecoration(
-                    color: Colors.red.shade400,
-                    shape: BoxShape.circle,
-                  ),
-                  markerDecoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  todayTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                  calendarStyle: CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                      color: Colors.grey.shade500,
+                      shape: BoxShape.circle,
+                    ),
+                    outsideDaysVisible: false,
+                    selectedTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      color: Colors.red.shade400,
+                      shape: BoxShape.circle,
+                    ),
+                    markerDecoration: const BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    todayTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
-            child: Text(
-              'List of Availabilities',
-              style: CustomStyles.sectionTitleTextStyle,
+            const Padding(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              child: Text(
+                'List of Availabilities',
+                style: CustomStyles.sectionTitleTextStyle,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: SizedBox(
-              height: 200,
-              child: FutureBuilder(
-                builder: (context, snap) {
-                  if (snap.hasData &&
-                      snap.connectionState == ConnectionState.done) {
-                    var data = snap.data as Map;
-                    if(!data['empty']){
-                    return ListView.builder(
-                      itemCount: data['data'].length,
-                      itemBuilder: (context, index) {
-                        var item = data['data'][index];
-                        return ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(color: Colors.white),
-                          ),
-                          title: Text("Date: ${item['date']}"),
-                          isThreeLine: true,
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete_forever_rounded),
-                            onPressed: () async {
-                              final response =
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: SizedBox(
+                height: 200,
+                child: FutureBuilder(
+                  builder: (context, snap) {
+                    if (snap.hasData &&
+                        snap.connectionState == ConnectionState.done) {
+                      var data = snap.data as Map;
+                      if(!data['empty']){
+                        return ListView.builder(
+                          itemCount: data['data'].length,
+                          itemBuilder: (context, index) {
+                            var item = data['data'][index];
+                            return ListTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: const BorderSide(color: Colors.white),
+                              ),
+                              title: Text("Date: ${item['date']}"),
+                              isThreeLine: true,
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete_forever_rounded),
+                                onPressed: () async {
+                                  final response =
                                   await DataRepo().deleteAvailabilityUser(item['id']);
-                              if(!response['errorsExists']){
-                                setState(() {
+                                  if(!response['errorsExists']){
+                                    setState(() {
 
-                                });
-                              }
-                            },
-                          ),
-                          subtitle: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Start Time: ${item['startTime']}"),
-                              Text("End Time: ${item['endTime']}"),
-                            ],
+                                    });
+                                  }
+                                },
+                              ),
+                              subtitle: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Start Time: ${item['startTime']}"),
+                                  Text("End Time: ${item['endTime']}"),
+                                ],
+                              ),
+                            );
+                          },
+                        );}
+                      else {
+                        return Center(
+                          child: Container(
+                            child: Text("No Availability Found!"),
                           ),
                         );
-                      },
-                    );}
-                    else {
-                      return Center(
-                        child: Container(
-                          child: Text("No Availability Found!"),
+                      }
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
                         ),
                       );
                     }
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                future: fetchEvents(),
+                  },
+                  future: fetchEvents(),
+                ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
-            child: Text(
-              'Set your Availability',
-              style: CustomStyles.sectionTitleTextStyle,
-            ),
-          ),
-          ListTile(
-            title: Text(
-              dateFormat.format(_selectedDate),
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+            const Padding(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              child: Text(
+                'Set your Availability',
+                style: CustomStyles.sectionTitleTextStyle,
               ),
             ),
-            subtitle: const Text(
-              'Date',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
+            ListTile(
+              title: Text(
+                dateFormat.format(_selectedDate),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+              ),
+              subtitle: const Text(
+                'Date',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-          ListTile(
-            title: Text(
-              availability,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
+            ListTile(
+              title: Text(
+                availability,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            subtitle: const Text(
-              'Start Time',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
+              subtitle: const Text(
+                'Start Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            trailing: IconButton(
-              onPressed: () async {
-                TimeRange result = await showTimeRangePicker(context: context);
-                setState(() {
-                  availability =
-                      "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
-                  startTime = DateTime(now.year, now.month, now.day,
-                      result.startTime.hour, result.startTime.minute);
-                  endTime = DateTime(now.year, now.month, now.day,
-                      result.endTime.hour, result.endTime.minute);
-                });
-              },
-              icon: const Icon(
-                Icons.punch_clock_rounded,
-                color: Colors.redAccent,
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 20),
-          ),
-          Center(
-            child: ElevatedButton(
+              trailing: IconButton(
                 onPressed: () async {
-                  var user = await Amplify.Auth.getCurrentUser();
-                  var response = await DataRepo().createAvailabilityUser(
-                      user.userId, startTime, endTime, _selectedDate);
-                  if (response['createAvailabilityUser']['id']) {
-                    Navigator.pop(context);
-                  }
+                  TimeRange result = await showTimeRangePicker(context: context);
+                  setState(() {
+                    availability =
+                    "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
+                    startTime = DateTime(now.year, now.month, now.day,
+                        result.startTime.hour, result.startTime.minute);
+                    endTime = DateTime(now.year, now.month, now.day,
+                        result.endTime.hour, result.endTime.minute);
+                  });
                 },
-                child: const Text('Save')),
-          ),
-        ],
+                icon: const Icon(
+                  Icons.punch_clock_rounded,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20),
+            ),
+            Center(
+              child: ElevatedButton(
+                  onPressed: () async {
+                    var user = await Amplify.Auth.getCurrentUser();
+                    var response = await DataRepo().createAvailabilityUser(
+                        user.userId, startTime, endTime, _selectedDate);
+                    if (!response['errorsExists'] && !response['empty']) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Save')),
+            ),
+          ],
+        ),
       ),
     );
   }

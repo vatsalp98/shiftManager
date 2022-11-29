@@ -26,19 +26,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Authenticator(
-      signUpForm: SignUpForm.custom(
-        fields: [
-          SignUpFormField.givenName(required: true),
-          SignUpFormField.familyName(required: true),
-          SignUpFormField.email(required: true),
-          SignUpFormField.custom(
-            title: "Employee ID",
-            attributeKey: const CognitoUserAttributeKey.custom('employeeId'),
-          ),
-          SignUpFormField.password(),
-          SignUpFormField.passwordConfirmation(),
-        ],
-      ),
       authenticatorBuilder: (BuildContext context, AuthenticatorState state) {
         const padding =
             EdgeInsets.only(left: 16, right: 16, top: 38, bottom: 28);

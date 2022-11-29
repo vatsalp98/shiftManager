@@ -30,13 +30,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: CustomStyles.screenTitleTextStyle,
           ),
           SizedBox(
-            height: 250,
+            height: 350,
             child: FutureBuilder(
               future: AuthRepo.fetchCustomUserAttributes(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   var data = snapshot.data as Map;
+                  print(data);
                   return ListView(
                     children: [
                       ListTile(
@@ -96,6 +97,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 color: Colors.green,
                               )
                             : const Icon(Icons.dangerous_rounded),
+                      ),
+                      ListTile(
+                        title: Text(
+                          data['custom:employeeid'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Employee ID',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ],
                   );

@@ -2,8 +2,13 @@ import 'dart:convert';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:shift_manager/graphql/mutation.dart';
 import 'package:shift_manager/graphql/queries.dart';
+import 'package:intl/intl.dart';
 
 class DataRepo {
+  final awsDateFormat = DateFormat('yyyy-MM-dd');
+  final awsTimeFormat = DateFormat('hh:mm:ss.sss');
+
+
   fetchRequestItems(
       {required GraphQLOperation operation,
       required String queryName,
@@ -64,45 +69,38 @@ class DataRepo {
 
   createAvailabilityUser(String userId, DateTime startTime, DateTime endTime,
       DateTime date) async {
-    try {
-      final operation = Amplify.API.mutate(
-        request: GraphQLRequest(
-          document: GraphQLMutation.createAvailabilityUserMutation,
-          apiName: 'shiftmanager',
-          variables: {
-            "userId": userId,
-            "startTime": "${startTime.toIso8601String()}Z",
-            "endTime": "${endTime.toIso8601String()}Z",
-            "date": "${date.toIso8601String()}Z",
-          },
-        ),
-      );
-      final result = await operation.response;
-      if (result.errors.isNotEmpty) {
-        for (var element in result.errors) {
-          throw (element.message);
-        }
-      } else {
-        var data = json.decode(result.data);
-        return data;
-      }
-    } on ApiException {
-      rethrow;
-    }
+    final operation = Amplify.API.mutate(
+      request: GraphQLRequest(
+        document: GraphQLMutation.createAvailabilityUserMutation,
+        apiName: 'shiftmanager-cognito',
+        variables: {
+          "userId": userId,
+          "startTime": awsTimeFormat.format(startTime),
+          "endTime": awsTimeFormat.format(endTime),
+          "date": awsDateFormat.format(date),
+        },
+      ),
+    );
+    final result = await fetchRequestItems(operation: operation, queryName: "createAvailabilityUser", isMany: false);
+    return result;
   }
 
-  listAvailabilityUser(String userId) async {
+  listAvailabilityUser(String userId, String date) async {
+    print(userId);
+    print(date);
     final operation = Amplify.API.query(
       request: GraphQLRequest(
         document: GraphQLQueries.listAvailabilityByUser,
         variables: {
           "eq": userId,
+          "eq1": date,
         },
         apiName: 'shiftmanager',
       ),
     );
-    final result = fetchRequestItems(
+    final result = await fetchRequestItems(
         operation: operation, queryName: "listAvailabilityUsers");
+    print(result);
     return result;
   }
 

@@ -16,12 +16,12 @@ class GraphQLQueries {
 
  static const listAvailabilityByUser = '''
  ${GqlFragments.CORE_AVAILABILITYUSER_FIELDS}
- query Mquery(\$eq: ID) {
-   listAvailabilityUsers(filter: {userId: {eq: \$eq}}) {
-     items {
-       ...CoreAvailabilityUserFields
-     }
-   }
- }
+ query MyQuery(\$eq: ID, \$eq1: String) {
+  listAvailabilityUsers(filter: {userId: {eq: \$eq}, date: {eq: \$eq1}}) {
+    items {
+      ...CoreAvailabilityUserFields
+    }
+  }
+}
  ''';
 }
