@@ -46,9 +46,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
           icon: const Icon(Icons.calendar_month_rounded),
           title: "Shifts",
           textStyle: const TextStyle(fontWeight: FontWeight.w500),
-          activeColorSecondary: Colors.white,
-          activeColorPrimary: Colors.red.shade800,
-          inactiveColorPrimary: Colors.red,
+          activeColorSecondary: Colors.black,
+          activeColorPrimary: Colors.red.shade700,
+          inactiveColorPrimary: Colors.grey.shade500,
           routeAndNavigatorSettings: const RouteAndNavigatorSettings(
               initialRoute: '/',
               onGenerateRoute: RouteGenerator.generateRoute)),
@@ -56,9 +56,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
           icon: const Icon(Icons.settings_rounded),
           title: "Settings",
           textStyle: const TextStyle(fontWeight: FontWeight.w500),
-          activeColorPrimary: Colors.red.shade800,
-          activeColorSecondary: Colors.white,
-          inactiveColorPrimary: Colors.red,
+          activeColorSecondary: Colors.black,
+          inactiveColorPrimary: Colors.grey.shade500,
+          activeColorPrimary: Colors.red.shade700,
           routeAndNavigatorSettings: const RouteAndNavigatorSettings(
               initialRoute: '/',
               onGenerateRoute: RouteGenerator.generateRoute)),
@@ -73,21 +73,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
         controller: tabController,
         screens: _buildScreens(),
         items: _navBarsItems(),
+        navBarHeight: 65,
         stateManagement: true,
         confineInSafeArea: true,
         itemAnimationProperties: const ItemAnimationProperties(
-          duration: Duration(milliseconds: 400),
+          duration: Duration(milliseconds: 75),
           curve: Curves.ease,
         ),
         decoration: const NavBarDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+            topLeft: Radius.circular(5),
+            topRight: Radius.circular(5),
           ),
-          colorBehindNavBar: Colors.teal,
         ),
         popActionScreens: PopActionScreensType.all,
-        backgroundColor: Colors.red.shade100,
+        backgroundColor: Colors.white,
         popAllScreensOnTapOfSelectedTab: true,
         screenTransitionAnimation: const ScreenTransitionAnimation(
           animateTabTransition: true,
@@ -95,7 +95,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           duration: Duration(milliseconds: 200),
         ),
         hideNavigationBarWhenKeyboardShows: true,
-        navBarStyle: NavBarStyle.style10,
+        navBarStyle: NavBarStyle.style6,
       ),
     );
   }

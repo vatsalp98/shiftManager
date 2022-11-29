@@ -21,6 +21,7 @@ dependencies:
   table_calendar: ^3.0.8
   time_range_picker: ^2.2.0
   amplify_api: ^0.6.0
+  flutter_native_splash: ^2.2.16
 
 dev_dependencies:
   flutter_test:
