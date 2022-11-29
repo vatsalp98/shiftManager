@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:shift_manager/screens/home.dart';
 import 'package:shift_manager/screens/schedule.dart';
 import 'package:shift_manager/screens/settings.dart';
 
@@ -25,7 +24,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   List<Widget> _buildScreens() {
     return [
-      const MyHomePage(title: 'Home'),
+      // const MyHomePage(title: 'Home'),
       const ScheduleScreen(),
       const SettingsScreen(),
     ];
@@ -33,19 +32,19 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
-      PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
-          title: "Home",
-          textStyle: const TextStyle(fontWeight: FontWeight.w500),
-          activeColorSecondary: Colors.white,
-          activeColorPrimary: Colors.red.shade800,
-          inactiveColorPrimary: Colors.red,
-          routeAndNavigatorSettings: const RouteAndNavigatorSettings(
-              initialRoute: '/',
-              onGenerateRoute: RouteGenerator.generateRoute)),
+      // PersistentBottomNavBarItem(
+      //     icon: const Icon(Icons.home),
+      //     title: "Home",
+      //     textStyle: const TextStyle(fontWeight: FontWeight.w500),
+      //     activeColorSecondary: Colors.white,
+      //     activeColorPrimary: Colors.red.shade800,
+      //     inactiveColorPrimary: Colors.red,
+      //     routeAndNavigatorSettings: const RouteAndNavigatorSettings(
+      //         initialRoute: '/',
+      //         onGenerateRoute: RouteGenerator.generateRoute)),
       PersistentBottomNavBarItem(
           icon: const Icon(Icons.calendar_month_rounded),
-          title: "Schedule",
+          title: "Shifts",
           textStyle: const TextStyle(fontWeight: FontWeight.w500),
           activeColorSecondary: Colors.white,
           activeColorPrimary: Colors.red.shade800,

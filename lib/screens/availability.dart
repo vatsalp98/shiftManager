@@ -28,7 +28,16 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
   @override
   void initState() {
     tableFormat = CalendarFormat.twoWeeks;
+    fetchEvents();
     super.initState();
+  }
+
+  fetchEvents() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final response = await DataRepo().listAvailabilityUser(user.userId);
+    if (!response['errorsExists']) {
+      return response;
+    }
   }
 
   @override
@@ -123,6 +132,76 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
           const Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
             child: Text(
+              'List of Availabilities',
+              style: CustomStyles.sectionTitleTextStyle,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: SizedBox(
+              height: 200,
+              child: FutureBuilder(
+                builder: (context, snap) {
+                  if (snap.hasData &&
+                      snap.connectionState == ConnectionState.done) {
+                    var data = snap.data as Map;
+                    if(!data['empty']){
+                    return ListView.builder(
+                      itemCount: data['data'].length,
+                      itemBuilder: (context, index) {
+                        var item = data['data'][index];
+                        return ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(color: Colors.white),
+                          ),
+                          title: Text("Date: ${item['date']}"),
+                          isThreeLine: true,
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_forever_rounded),
+                            onPressed: () async {
+                              final response =
+                                  await DataRepo().deleteAvailabilityUser(item['id']);
+                              if(!response['errorsExists']){
+                                setState(() {
+
+                                });
+                              }
+                            },
+                          ),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Start Time: ${item['startTime']}"),
+                              Text("End Time: ${item['endTime']}"),
+                            ],
+                          ),
+                        );
+                      },
+                    );}
+                    else {
+                      return Center(
+                        child: Container(
+                          child: Text("No Availability Found!"),
+                        ),
+                      );
+                    }
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    );
+                  }
+                },
+                future: fetchEvents(),
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 10, top: 10),
+            child: Text(
               'Set your Availability',
               style: CustomStyles.sectionTitleTextStyle,
             ),
@@ -181,12 +260,12 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                 onPressed: () async {
                   var user = await Amplify.Auth.getCurrentUser();
                   var response = await DataRepo().createAvailabilityUser(
-                    user.userId, startTime, endTime, _selectedDate
-                  );
-                  if(response['createAvailabilityUser']['id']){
+                      user.userId, startTime, endTime, _selectedDate);
+                  if (response['createAvailabilityUser']['id']) {
                     Navigator.pop(context);
                   }
-                }, child: const Text('Save')),
+                },
+                child: const Text('Save')),
           ),
         ],
       ),

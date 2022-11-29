@@ -61,5 +61,17 @@
         }
       }
     }
+  },
+  "function": {
+    "shiftmanagerdynamoWriter": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "shiftmanagerusercount": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
   }
 }

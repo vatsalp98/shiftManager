@@ -5,4 +5,11 @@ class GraphQLMutation {
       id
     }
   }''';
+
+  static const deleteAvailabilityUser = r'''
+  mutation MyMutation($id: ID!) {
+    deleteAvailabilityUser(input: {id: $id}) {
+      id
+    }
+  }''';
 }

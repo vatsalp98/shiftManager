@@ -6,6 +6,12 @@ class GqlFragments {
         last_name
         email
         employeeId
+        roles
+        region {
+          id 
+          province
+          city
+        }
   }''';
 
   static const CORE_SHIFT_FIELDS = r'''
@@ -17,6 +23,14 @@ class GqlFragments {
         isCancelled
         isRemote
         isNoShow
+        maxSlots
+        waitingQueue
+        shiftType
+        region {
+          id
+          province
+          city
+        }
   }''';
 
   static const CORE_SHIFTUSER_FIELDS = r'''
@@ -26,4 +40,12 @@ class GqlFragments {
         shiftId
   }''';
 
+  static const CORE_AVAILABILITYUSER_FIELDS = r'''
+  fragment CoreAvailabilityUserFields on AvailabilityUser {
+    id
+    date
+    startTime
+    endTime
+    userId
+  }''';
 }

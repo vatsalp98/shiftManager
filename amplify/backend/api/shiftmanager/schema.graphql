@@ -1,7 +1,3 @@
-# This "input" configures a global authorization rule to enable public access to
-# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
-
 type User @model @auth(rules: [
     { allow: groups, groups: ["admin"] },
     { allow: public, operations: [read, create, update] },
@@ -12,6 +8,9 @@ type User @model @auth(rules: [
     last_name: String!
     email: String!
     employeeId: String
+    roles: [String]
+    regionId: ID!
+    region: Region @hasOne(fields: ["regionId"])
 }
 
 type Shift @model @auth(rules: [
@@ -20,12 +19,17 @@ type Shift @model @auth(rules: [
     { allow: private, operations: [read, create, update, delete] }
   ]) {
     id: ID!
-    date: AWSDateTime!
-    startTime: AWSDateTime!
-    endTime: AWSDateTime!
+    date: AWSDate!
+    startTime: AWSTime!
+    endTime: AWSTime!
     isCancelled: Boolean!
     isRemote: Boolean!
     isNoShow: Boolean!
+    maxSlots: Int!
+    waitingQueue: Int!
+    shiftType: String!
+    regionId: ID!
+    region: Region @hasOne(fields: ["regionId"])
 }
 
 type ShiftUser @model @auth(rules: [
@@ -46,9 +50,24 @@ type AvailabilityUser @model @auth(rules: [
     { allow: private, operations: [read, create, update, delete] }
   ]) {
     id: ID!
-    date: AWSDateTime!
-    startTime: AWSDateTime!
-    endTime: AWSDateTime!
+    date: AWSDate!
+    startTime: AWSTime!
+    endTime: AWSTime!
     userId: ID!
     user: User @hasOne(fields: ["userId"])
+}
+
+type Region @model @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: public, operations: [read] },
+    { allow: private, operations: [read, create, update, delete] }
+  ]) {
+  id: ID!
+  province: String!
+  city: String!
+  centerId: String
+}
+
+type Query {
+  getUserCount:Int @aws_api_key @aws_cognito_user_pools @function(name:"shiftmanagerusercount-dev")
 }

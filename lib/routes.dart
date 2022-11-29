@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shift_manager/screens/availability.dart';
-import 'package:shift_manager/screens/onboarding.dart';
+import 'package:shift_manager/screens/settings.dart';
+import 'package:shift_manager/shared/bottom_nav.dart';
+import 'package:shift_manager/screens/schedule.dart';
 
 class RoutesClass {
   static const initial = '/';
@@ -15,15 +17,7 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesClass.initial:
-        return MaterialPageRoute(builder: (context) => Container());
-      case RoutesClass.authIntro:
-        {
-          return MaterialPageRoute(
-            builder: ((context) {
-              return Container();
-            }),
-          );
-        }
+        return MaterialPageRoute(builder: (context) => const BottomNavigation());
       case RoutesClass.availability:
         {
           return MaterialPageRoute(
@@ -32,12 +26,12 @@ class RouteGenerator {
       case RoutesClass.home:
         {
           return MaterialPageRoute(
-              builder: (context) => Container());
+              builder: (context) => const ScheduleScreen());
         }
-      case RoutesClass.intro:
+      case RoutesClass.settings:
         {
           return MaterialPageRoute(
-              builder: (context) => const OnboardingScreen());
+              builder: (context) => const SettingsScreen());
         }
 
       default:
