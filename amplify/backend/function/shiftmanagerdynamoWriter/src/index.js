@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
     let date = new Date();
  
     if (event.request.userAttributes.sub) {
-        // console.log(event.request.userAttributes);
+        console.log(event.request.userAttributes);
         let params = {
             Item: {
                 'id': {S: event.request.userAttributes.sub},
@@ -16,6 +16,8 @@ exports.handler = async (event, context) => {
                 'last_name': {S: event.request.userAttributes.family_name},
                 'email': {S: event.request.userAttributes.email},
                 'employeeId': {S: event.request.userAttributes['custom:employeeId']},
+                'roles': {L : [{S: event.request.userAttributes['custom:role']}]},
+                'regionId': {S: event.request.userAttributes['custom:regionId']},
                 'createdAt': {S: date.toISOString()},
                 'updatedAt': {S: date.toISOString()},
             },

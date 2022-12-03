@@ -21,7 +21,7 @@
       "function": {
         "shiftmanagerdynamoWriter": {
           "deploymentBucketName": "amplify-shiftmanager-dev-231554-deployment",
-          "s3Key": "amplify-builds/shiftmanagerdynamoWriter-343656444c665a396742-build.zip"
+          "s3Key": "amplify-builds/shiftmanagerdynamoWriter-736e44584744576a7158-build.zip"
         },
         "shiftmanagerusercount": {
           "deploymentBucketName": "amplify-shiftmanager-dev-231554-deployment",

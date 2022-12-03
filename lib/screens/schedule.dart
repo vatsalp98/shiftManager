@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:time_range_picker/time_range_picker.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -15,7 +16,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   late CalendarFormat tableFormat;
   final now = DateTime.now();
   DateTime _selectedDate = DateTime.now();
-  List _events = [];
   DateTime _focusedDate = DateTime.now();
   var dateFormat = DateFormat('EEEE dd-MM-yyyy');
   var availability = 'Time Interval';
@@ -50,7 +50,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.red.shade100.withOpacity(0.5),
+                color: Colors.white10,
               ),
               child: TableCalendar(
                 focusedDay: _focusedDate,
@@ -91,12 +91,131 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           ),
           const Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
-            child: const Text(
+            child: Text(
               'Select your Shifts',
               style: CustomStyles.sectionTitleTextStyle,
             ),
           ),
-
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 15, right: 10),
+            child: SizedBox(
+              height: 350,
+              child: FutureBuilder(
+                future: DataRepo().listShiftUsers(),
+                builder: (context, snap) {
+                  if (snap.hasData &&
+                      snap.connectionState == ConnectionState.done) {
+                    var data = snap.data as Map;
+                    return ListView.builder(
+                      itemCount: data['data'].length,
+                      itemBuilder: (context, index) {
+                        var item = data['data'][index];
+                        print(item);
+                        return ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(color: Colors.white),
+                          ),
+                          title: const Text(
+                            'Shift',
+                            style: CustomStyles.screenTitleTextStyle,
+                          ),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Date: ${item['shift']['date']}",
+                                style: CustomStyles.bodyTextStyle,
+                              ),
+                              Text(
+                                'Status: ${item['shift']['status']}',
+                                style: CustomStyles.bodyTextStyle,
+                              )
+                            ],
+                          ),
+                          isThreeLine: true,
+                          trailing: item['shiftStatus'] == 'initial'
+                              ? IconButton(
+                                  icon: Icon(Icons.calendar_month_rounded),
+                                  onPressed: () async {
+                                    final response = await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Confirm Shift"),
+                                            clipBehavior: Clip.antiAlias,
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Are you sure you want to confirm this shift on ${item['shift']['date']} from ${item['shift']['startTime'].substring(0, 5)} to ${item['shift']['endTime'].substring(0, 5)} ?',
+                                                  style: CustomStyles
+                                                      .bodyTextStyle,
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                          const SnackBar(
+                                                    content: Text('Cancelled'),
+                                                    backgroundColor:
+                                                        Colors.yellow,
+                                                  ));
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  final result =
+                                                      await DataRepo()
+                                                          .updateShiftUser(
+                                                              item['id'],
+                                                              'confirmed');
+                                                  if (!result['errorsExists']) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                      content: Text(
+                                                          'Shift Confirmed'),
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ));
+                                                    Navigator.pop(
+                                                        context, true);
+                                                  }
+                                                },
+                                                child: const Text('Ok'),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                )
+                              : const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.green,
+                                  size: 27,
+                                ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

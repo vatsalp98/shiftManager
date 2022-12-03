@@ -1,13 +1,13 @@
 import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:shift_manager/graphql/mutation.dart';
 import 'package:shift_manager/graphql/queries.dart';
-import 'package:intl/intl.dart';
 
 class DataRepo {
   final awsDateFormat = DateFormat('yyyy-MM-dd');
   final awsTimeFormat = DateFormat('hh:mm:ss.sss');
-
 
   fetchRequestItems(
       {required GraphQLOperation operation,
@@ -30,7 +30,10 @@ class DataRepo {
         result['errorsExists'] = false;
         var data = json.decode(response.data);
         if (isMany) {
-          result['empty'] = data[queryName]['items'].length == 0 || data[queryName]['items'] == null ? true : false;
+          result['empty'] = data[queryName]['items'].length == 0 ||
+                  data[queryName]['items'] == null
+              ? true
+              : false;
           result['data'] = data[queryName]['items'];
         } else {
           result['empty'] = data[queryName] == null ? true : false;
@@ -81,7 +84,10 @@ class DataRepo {
         },
       ),
     );
-    final result = await fetchRequestItems(operation: operation, queryName: "createAvailabilityUser", isMany: false);
+    final result = await fetchRequestItems(
+        operation: operation,
+        queryName: "createAvailabilityUser",
+        isMany: false);
     return result;
   }
 
@@ -106,10 +112,46 @@ class DataRepo {
 
   deleteAvailabilityUser(String id) async {
     final operation = Amplify.API.mutate(
-      request: GraphQLRequest(document: GraphQLMutation.deleteAvailabilityUser,
-      variables: {"id": id}, apiName: "shiftmanager-cognito")
+        request: GraphQLRequest(
+            document: GraphQLMutation.deleteAvailabilityUser,
+            variables: {"id": id},
+            apiName: "shiftmanager-cognito"));
+    final result = await fetchRequestItems(
+        operation: operation,
+        queryName: "deleteAvailabilityUser",
+        isMany: false);
+    return result;
+  }
+
+  listShiftUsers() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final operation = Amplify.API.query(
+      request: GraphQLRequest(
+        document: GraphQLQueries.listShiftUsersQuery,
+        variables: {
+          "eq": user.userId,
+        },
+        apiName: "shiftmanager",
+      ),
     );
-    final result = fetchRequestItems(operation: operation, queryName: "deleteAvailabilityUser", isMany: false);
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "listShiftUsers");
+    return result;
+  }
+
+  updateShiftUser(String id, String status) async {
+    final operation = Amplify.API.mutate(
+      request: GraphQLRequest(
+        document: GraphQLMutation.confirmShiftUserMutation,
+        variables: {
+          "id": id,
+          "shiftStatus": status,
+        },
+        apiName: "shiftmanager-cognito",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "updateShiftUser", isMany: false);
     return result;
   }
 }

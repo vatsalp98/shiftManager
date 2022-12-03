@@ -12,4 +12,11 @@ class GraphQLMutation {
       id
     }
   }''';
+
+  static const confirmShiftUserMutation = r'''
+  mutation MyMutation($id: ID!, $shiftStatus: String) {
+    updateShiftUser(input: {id: $id, shiftStatus: $shiftStatus}) {
+      id
+    }
+  }''';
 }

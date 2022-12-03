@@ -26,6 +26,7 @@ class GqlFragments {
         maxSlots
         waitingQueue
         shiftType
+        status
         region {
           id
           province
@@ -38,6 +39,7 @@ class GqlFragments {
         id
         userId
         shiftId
+        status
   }''';
 
   static const CORE_AVAILABILITYUSER_FIELDS = r'''

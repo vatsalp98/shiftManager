@@ -29,6 +29,7 @@ type Shift @model @auth(rules: [
     waitingQueue: Int!
     shiftType: String!
     regionId: ID!
+    status: String!
     region: Region @hasOne(fields: ["regionId"])
 }
 
@@ -40,6 +41,7 @@ type ShiftUser @model @auth(rules: [
     id: ID!
     userId: ID!
     shiftId: ID!
+    shiftStatus: String!
     user: User @hasOne(fields: ["userId"])
     shift: Shift @hasOne(fields: ["shiftId"])
 }
@@ -69,5 +71,10 @@ type Region @model @auth(rules: [
 }
 
 type Query {
-  getUserCount:Int @aws_api_key @aws_cognito_user_pools @function(name:"shiftmanagerusercount-dev")
+    getUserCount:Int @aws_api_key @aws_cognito_user_pools @function(name:"shiftmanagerusercount-dev")
+    getCognitoUser (username: String): AWSJSON  @aws_api_key @function(name: "listingresolver-dev")
+    createCognitoUser (email: String!, given_name: String!, last_name: String!, employeeId: String!, regionId: String!, role: String!): AWSJSON @aws_cognito_user_pools  @aws_api_key @function(name: "listingresolver-dev")
+    deleteCognitoUser(id: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name: "listingresolver-dev")
+    getUserPoolCount: AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
+    addUserToGroup(id: String!, group_name: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
 }
