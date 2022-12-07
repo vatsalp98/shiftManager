@@ -22,6 +22,8 @@ dependencies:
   time_range_picker: ^2.2.0
   amplify_api: ^0.6.0
   flutter_native_splash: ^2.2.16
+  flutter_svg: ^1.1.6
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,7 @@ flutter:
     - assets/
     - assets/languages/
     - assets/font/
+    - assets/svg/
 
   fonts:
     - family: Poppins

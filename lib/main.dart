@@ -59,20 +59,20 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              persistentFooterButtons: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Don\'t have an account?'),
-                    TextButton(
-                      onPressed: () => state.changeStep(
-                        AuthenticatorStep.signUp,
-                      ),
-                      child: const Text('Sign Up'),
-                    ),
-                  ],
-                ),
-              ],
+              // persistentFooterButtons: [
+              //   Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       const Text('Don\'t have an account?'),
+              //       TextButton(
+              //         onPressed: () => state.changeStep(
+              //           AuthenticatorStep.signUp,
+              //         ),
+              //         child: const Text('Sign Up'),
+              //       ),
+              //     ],
+              //   ),
+              // ],
             );
           case AuthenticatorStep.signUp:
             return Scaffold(
@@ -105,7 +105,8 @@ class MyApp extends StatelessWidget {
                           SignUpFormField.email(required: true),
                           SignUpFormField.custom(
                             title: "Employee ID",
-                            attributeKey: const CognitoUserAttributeKey.custom('employeeId'),
+                            attributeKey: const CognitoUserAttributeKey.custom(
+                                'employeeId'),
                           ),
                           SignUpFormField.password(),
                           SignUpFormField.passwordConfirmation(),

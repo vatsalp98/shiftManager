@@ -10,13 +10,13 @@ class CustomStyles {
   static const sectionTitleTextStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: Colors.white,
+    color: Colors.black,
     decoration: TextDecoration.underline,
   );
 
   static const bodyTextStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: Colors.white,
+    color: Colors.black,
   );
 }

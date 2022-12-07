@@ -1,8 +1,9 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shift_manager/routes.dart';
+
 import '../repositories/auth_repo.dart';
+import '../shared/const.dart';
 import '../shared/styles.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -21,26 +22,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text('Settings'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const Text(
-            'User Information',
-            style: CustomStyles.screenTitleTextStyle,
+          const Padding(
+            padding: EdgeInsets.only(top: 8, left: 10, bottom: 10),
+            child: Text(
+              'User Information',
+              style: CustomStyles.screenTitleTextStyle,
+            ),
           ),
           SizedBox(
-            height: 350,
+            height: 450,
             child: FutureBuilder(
               future: AuthRepo.fetchCustomUserAttributes(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
                   var data = snapshot.data as Map;
-                  print(data);
                   return ListView(
                     children: [
                       ListTile(
+                        leading: const Icon(Icons.person, size: 30),
                         title: Text(
                           data['given_name'],
                           style: const TextStyle(
@@ -56,6 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       ListTile(
+                        leading: const Icon(Icons.person, size: 30),
                         title: Text(
                           data['family_name'],
                           style: const TextStyle(
@@ -71,6 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       ListTile(
+                        leading: const Icon(Icons.email_rounded, size: 30),
                         title: Text(
                           data['email'],
                           style: const TextStyle(
@@ -93,12 +99,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                         trailing: data['email_verified'] == "true"
                             ? const Icon(
-                                Icons.check_circle_rounded,
+                                Icons.verified_user_rounded,
                                 color: Colors.green,
+                                size: 30,
                               )
                             : const Icon(Icons.dangerous_rounded),
                       ),
                       ListTile(
+                        leading: const Icon(Icons.numbers, size: 30),
                         title: Text(
                           data['custom:employeeid'],
                           style: const TextStyle(
@@ -113,29 +121,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                       ),
+                      ListTile(
+                        leading: const Icon(Icons.numbers, size: 30),
+                        title: Text(
+                          data['custom:regionid'] ==
+                                  Constants.DEFAULT_SURREY_REGION
+                              ? "Surrey, BC"
+                              : "Others",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Region',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        leading:
+                            const Icon(Icons.admin_panel_settings, size: 30),
+                        title: Text(
+                          data['custom:role'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Roles',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 } else {
-                  return const CircularProgressIndicator(
-                    color: Colors.red,
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.red,
+                    ),
                   );
                 }
               },
             ),
           ),
-          ListTile(
-            title: const Text(
-              'Availability',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
+          Padding(
+            padding: const EdgeInsets.only(top: 50, left: 10, right: 10),
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
+              leading: const Icon(Icons.calendar_month_rounded, size: 25),
+              title: const Text(
+                'Availability',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              tileColor: Colors.red.shade50,
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right_rounded, size: 25),
+              onTap: () {
+                Navigator.pushNamed(context, RoutesClass.availability);
+              },
             ),
-            trailing: const Icon(Icons.keyboard_arrow_right_rounded),
-            onTap: () {
-              Navigator.pushNamed(context, RoutesClass.availability);
-            },
           ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
+          const Padding(padding: EdgeInsets.only(top: 70)),
           const Center(
             child: SignOutButton(),
           ),
