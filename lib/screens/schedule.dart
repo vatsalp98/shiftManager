@@ -48,7 +48,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             bottom: Radius.circular(15),
           ),
         ),
-        backgroundColor: HexColor('#893F45'),
+        backgroundColor: HexColor('#D2042D'),
       ),
       backgroundColor: Colors.white,
       body: Column(
