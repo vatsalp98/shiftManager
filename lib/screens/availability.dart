@@ -1,9 +1,10 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:time_range_picker/time_range_picker.dart';
+
 import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
 
@@ -32,12 +33,12 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
 
   fetchEvents() async {
     final user = await Amplify.Auth.getCurrentUser();
-    final response = await DataRepo().listAvailabilityUser(user.userId, DataRepo().awsDateFormat.format(_selectedDate));
+    final response = await DataRepo().listAvailabilityUser(
+        user.userId, DataRepo().awsDateFormat.format(_selectedDate));
     if (!response['errorsExists']) {
       return response;
     }
   }
-
 
   @override
   void dispose() {
@@ -62,7 +63,8 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   boxShadow: const [
-                    BoxShadow(color: Colors.grey, blurRadius: 2, spreadRadius: 2),
+                    BoxShadow(
+                        color: Colors.grey, blurRadius: 2, spreadRadius: 2),
                   ],
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.red.shade100,
@@ -139,13 +141,13 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
             Padding(
               padding: const EdgeInsets.all(15),
               child: SizedBox(
-                height: 200,
+                height: 150,
                 child: FutureBuilder(
                   builder: (context, snap) {
                     if (snap.hasData &&
                         snap.connectionState == ConnectionState.done) {
                       var data = snap.data as Map;
-                      if(!data['empty']){
+                      if (!data['empty']) {
                         return ListView.builder(
                           itemCount: data['data'].length,
                           itemBuilder: (context, index) {
@@ -160,12 +162,10 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                               trailing: IconButton(
                                 icon: const Icon(Icons.delete_forever_rounded),
                                 onPressed: () async {
-                                  final response =
-                                  await DataRepo().deleteAvailabilityUser(item['id']);
-                                  if(!response['errorsExists']){
-                                    setState(() {
-
-                                    });
+                                  final response = await DataRepo()
+                                      .deleteAvailabilityUser(item['id']);
+                                  if (!response['errorsExists']) {
+                                    setState(() {});
                                   }
                                 },
                               ),
@@ -179,11 +179,30 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                               ),
                             );
                           },
-                        );}
-                      else {
+                        );
+                      } else {
                         return Center(
                           child: Container(
-                            child: Text("No Availability Found!"),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: SvgPicture.asset(
+                                    'assets/svg/no_data.svg',
+                                    height: 75,
+                                    width: 75,
+                                  ),
+                                ),
+                                const Text(
+                                  'No Data',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }
@@ -236,10 +255,11 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
               ),
               trailing: IconButton(
                 onPressed: () async {
-                  TimeRange result = await showTimeRangePicker(context: context);
+                  TimeRange result =
+                      await showTimeRangePicker(context: context);
                   setState(() {
                     availability =
-                    "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
+                        "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
                     startTime = DateTime(now.year, now.month, now.day,
                         result.startTime.hour, result.startTime.minute);
                     endTime = DateTime(now.year, now.month, now.day,
@@ -253,7 +273,7 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: EdgeInsets.only(top: 5),
             ),
             Center(
               child: ElevatedButton(

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class CustomStyles {
   static const screenTitleTextStyle = TextStyle(
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: FontWeight.w600,
-    color: Colors.redAccent,
   );
 
   static const sectionTitleTextStyle = TextStyle(

@@ -1,8 +1,8 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shift_manager/shared/bottom_nav.dart';
 import 'package:shift_manager/shared/configure_amplify.dart';
 
@@ -59,77 +59,6 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              // persistentFooterButtons: [
-              //   Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       const Text('Don\'t have an account?'),
-              //       TextButton(
-              //         onPressed: () => state.changeStep(
-              //           AuthenticatorStep.signUp,
-              //         ),
-              //         child: const Text('Sign Up'),
-              //       ),
-              //     ],
-              //   ),
-              // ],
-            );
-          case AuthenticatorStep.signUp:
-            return Scaffold(
-              body: Padding(
-                padding: padding,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Image.asset(
-                          'assets/shift-logo.png',
-                          height: 75,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 25, top: 5),
-                        child: Text(
-                          'Shift Manager',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      // Insert Logo here
-                      SignUpForm.custom(
-                        fields: [
-                          SignUpFormField.givenName(required: true),
-                          SignUpFormField.familyName(required: true),
-                          SignUpFormField.email(required: true),
-                          SignUpFormField.custom(
-                            title: "Employee ID",
-                            attributeKey: const CognitoUserAttributeKey.custom(
-                                'employeeId'),
-                          ),
-                          SignUpFormField.password(),
-                          SignUpFormField.passwordConfirmation(),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              persistentFooterButtons: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    TextButton(
-                      onPressed: () => state.changeStep(
-                        AuthenticatorStep.signIn,
-                      ),
-                      child: const Text('Sign In'),
-                    ),
-                  ],
-                )
-              ],
             );
           default:
             return null;
@@ -164,6 +93,7 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              backgroundColor: MaterialStateProperty.all(HexColor('#893F45')),
               padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(10)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -172,7 +102,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        darkTheme: ThemeData.dark(),
         builder: Authenticator.builder(),
         debugShowCheckedModeBanner: false,
         home: const BottomNavigation(),

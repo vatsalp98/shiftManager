@@ -10,6 +10,7 @@ type User @model @auth(rules: [
     employeeId: String
     roles: [String]
     regionId: ID!
+    deviceToken: String
     region: Region @hasOne(fields: ["regionId"])
 }
 
@@ -40,6 +41,7 @@ type ShiftUser @model @auth(rules: [
   ]) {
     id: ID!
     userId: ID!
+    date: AWSDate!
     shiftId: ID!
     shiftStatus: String!
     user: User @hasOne(fields: ["userId"])

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:shift_manager/screens/home.dart';
 import 'package:shift_manager/screens/schedule.dart';
 import 'package:shift_manager/screens/settings.dart';
-
-import '../routes.dart';
+import 'package:hexcolor/hexcolor.dart';
+import '../screens/home.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -15,6 +14,7 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   late PersistentTabController tabController;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -22,80 +22,88 @@ class _BottomNavigationState extends State<BottomNavigation> {
     super.initState();
   }
 
-  List<Widget> _buildScreens() {
-    return [
-      // const HomeScreen(),
-      const ScheduleScreen(),
-      const SettingsScreen(),
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      // PersistentBottomNavBarItem(
-      //     icon: const Icon(Icons.home),
-      //     title: "Home",
-      //     textStyle: const TextStyle(fontWeight: FontWeight.w500),
-      //     activeColorSecondary: Colors.black,
-      //     activeColorPrimary: Colors.red.shade700,
-      //     inactiveColorPrimary: Colors.grey.shade500,
-      //     routeAndNavigatorSettings: const RouteAndNavigatorSettings(
-      //         initialRoute: '/',
-      //         onGenerateRoute: RouteGenerator.generateRoute)),
-      PersistentBottomNavBarItem(
-          icon: const Icon(Icons.calendar_month_rounded),
-          title: "Shifts",
-          textStyle: const TextStyle(fontWeight: FontWeight.w500),
-          activeColorSecondary: Colors.black,
-          activeColorPrimary: Colors.red.shade700,
-          inactiveColorPrimary: Colors.grey.shade500,
-          routeAndNavigatorSettings: const RouteAndNavigatorSettings(
-              initialRoute: '/',
-              onGenerateRoute: RouteGenerator.generateRoute)),
-      PersistentBottomNavBarItem(
-          icon: const Icon(Icons.settings_rounded),
-          title: "Settings",
-          textStyle: const TextStyle(fontWeight: FontWeight.w500),
-          activeColorSecondary: Colors.black,
-          inactiveColorPrimary: Colors.grey.shade500,
-          activeColorPrimary: Colors.red.shade700,
-          routeAndNavigatorSettings: const RouteAndNavigatorSettings(
-              initialRoute: '/',
-              onGenerateRoute: RouteGenerator.generateRoute)),
-    ];
-  }
+  final List<IconData> _navIcons = [
+    Icons.home_rounded,
+    Icons.calendar_month_rounded,
+    Icons.person_rounded,
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PersistentTabView(
-        context,
-        controller: tabController,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        navBarHeight: 65,
-        stateManagement: true,
-        confineInSafeArea: true,
-        itemAnimationProperties: const ItemAnimationProperties(
-          duration: Duration(milliseconds: 75),
-          curve: Curves.ease,
+      bottomNavigationBar: Container(
+        height: 70,
+        margin: const EdgeInsets.only(
+          left: 12,
+          right: 12,
+          bottom: 8,
         ),
-        decoration: const NavBarDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(5),
-            topRight: Radius.circular(5),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+              offset: Offset(2, 2),
+            )
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 0; i < _navIcons.length; i++) ...<Expanded>{
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = i;
+                      });
+                    },
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            _navIcons[i],
+                            color: i == currentIndex
+                                ? HexColor('#D2042D')
+                                : Colors.black54,
+                            size: i == currentIndex ? 34 : 26,
+                          ),
+                          i == currentIndex
+                              ? Container(
+                                  margin: const EdgeInsets.only(top: 5),
+                                  height: 3,
+                                  width: 22,
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.red,
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              }
+            ],
           ),
         ),
-        popActionScreens: PopActionScreensType.all,
-        backgroundColor: Colors.white,
-        popAllScreensOnTapOfSelectedTab: true,
-        screenTransitionAnimation: const ScreenTransitionAnimation(
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        hideNavigationBarWhenKeyboardShows: true,
-        navBarStyle: NavBarStyle.style6,
+      ),
+      body: IndexedStack(
+        index: currentIndex,
+        children: [
+          HomeScreen(),
+          const ScheduleScreen(),
+          const SettingsScreen(),
+        ],
       ),
     );
   }

@@ -33,6 +33,7 @@ class GraphQLQueries {
      items {
        id
        shiftStatus
+       date
        shift {
          ...CoreShiftFields
        }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -36,231 +37,225 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.black12,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        clipBehavior: Clip.antiAlias,
-        slivers: [
-          const SliverAppBar(
-            floating: true,
-            elevation: 0,
-            systemOverlayStyle: SystemUiOverlayStyle.light,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Shift Manager'),
-              expandedTitleScale: 1.5,
-              centerTitle: true,
-              stretchModes: [
-                StretchMode.blurBackground,
-                StretchMode.fadeTitle,
-              ],
-            ),
-            expandedHeight: 80,
-            backgroundColor: Colors.red,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Schedule'),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red.shade50,
-                      ),
-                      child: TableCalendar(
-                        focusedDay: _focusedDate,
-                        firstDay: now,
-                        lastDay: now.add(const Duration(days: 50)),
-                        selectedDayPredicate: ((day) =>
-                            isSameDay(day, _focusedDate)),
-                        onDaySelected: ((selectedDay, focusedDay) {
-                          if (!isSameDay(_selectedDate, selectedDay)) {
-                            setState(() {
-                              _selectedDate = selectedDay;
-                              _focusedDate = focusedDay;
-                              //_events = _getEventsForDay(selectedDay);
-                            });
-                          }
-                        }),
-                        calendarFormat: tableFormat,
-                        onFormatChanged: ((format) {
-                          setState(() {
-                            tableFormat = format;
-                          });
-                        }),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                          weekdayStyle: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          weekendStyle: TextStyle(
-                            color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        headerStyle: const HeaderStyle(
-                          formatButtonVisible: true,
-                          titleTextStyle: CustomStyles.screenTitleTextStyle,
-                          leftChevronVisible: true,
-                          titleCentered: true,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10, top: 10),
-                    child: Text(
-                      'Select your Shifts',
-                      style: CustomStyles.sectionTitleTextStyle,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, top: 15, right: 10),
-                    child: SizedBox(
-                      height: 350,
-                      child: FutureBuilder(
-                        future: DataRepo().listShiftUsers(),
-                        builder: (context, snap) {
-                          if (snap.hasData &&
-                              snap.connectionState == ConnectionState.done) {
-                            var data = snap.data as Map;
-                            return ListView.builder(
-                              itemCount: data['data'].length,
-                              itemBuilder: (context, index) {
-                                var item = data['data'][index];
-                                return ListTile(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: const BorderSide(color: Colors.black),
-                                  ),
-                                  title: Text(
-                                    '${item['shift']['shiftType']} Shift',
-                                    style: CustomStyles.screenTitleTextStyle,
-                                  ),
-                                  subtitle: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Date: ${item['shift']['date']}",
-                                        style: CustomStyles.bodyTextStyle,
-                                      ),
-                                      Text(
-                                        'Status: ${item['shift']['status']}',
-                                        style: CustomStyles.bodyTextStyle,
-                                      ),
-                                      Text(
-                                        'Type: ${item['shift']['shiftType']}',
-                                        style: CustomStyles.bodyTextStyle,
-                                      ),
-                                      Text(
-                                        'Location: ${item['shift']['region']['city']}, ${item['shift']['region']['province']}',
-                                        style: CustomStyles.bodyTextStyle,
-                                      )
-                                    ],
-                                  ),
-                                  isThreeLine: true,
-                                  trailing: item['shiftStatus'] == 'initial'
-                                      ? IconButton(
-                                          icon: const Icon(
-                                              Icons.calendar_month_rounded),
-                                          onPressed: () async {
-                                            final response = await showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: const Text(
-                                                        "Confirm Shift"),
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    content: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(
-                                                          'Are you sure you want to confirm this shift on ${item['shift']['date']} from ${item['shift']['startTime'].substring(0, 5)} to ${item['shift']['endTime'].substring(0, 5)} ?',
-                                                          style: CustomStyles
-                                                              .bodyTextStyle,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  const SnackBar(
-                                                            content: Text(
-                                                                'Cancelled'),
-                                                            backgroundColor:
-                                                                Colors.yellow,
-                                                          ));
-                                                          Navigator.pop(
-                                                              context, false);
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () async {
-                                                          final result =
-                                                              await DataRepo()
-                                                                  .updateShiftUser(
-                                                                      item[
-                                                                          'id'],
-                                                                      'confirmed');
-                                                          if (!result[
-                                                              'errorsExists']) {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    const SnackBar(
-                                                              content: Text(
-                                                                  'Shift Confirmed'),
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                            ));
-                                                            Navigator.pop(
-                                                                context, true);
-                                                          }
-                                                        },
-                                                        child: const Text('Ok'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                        )
-                                      : const Icon(
-                                          Icons.check_circle_rounded,
-                                          color: Colors.green,
-                                          size: 27,
-                                        ),
-                                );
-                              },
-                            );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+        ),
+        backgroundColor: HexColor('#893F45'),
+      ),
+      backgroundColor: Colors.white,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.red.shade50,
               ),
-            ]),
+              child: TableCalendar(
+                focusedDay: _focusedDate,
+                firstDay: now,
+                lastDay: now.add(const Duration(days: 50)),
+                selectedDayPredicate: ((day) => isSameDay(day, _focusedDate)),
+                onDaySelected: ((selectedDay, focusedDay) {
+                  if (!isSameDay(_selectedDate, selectedDay)) {
+                    setState(() {
+                      _selectedDate = selectedDay;
+                      _focusedDate = focusedDay;
+                      //_events = _getEventsForDay(selectedDay);
+                    });
+                  }
+                }),
+                calendarFormat: tableFormat,
+                onFormatChanged: ((format) {
+                  setState(() {
+                    tableFormat = format;
+                  });
+                }),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  weekendStyle: TextStyle(
+                    color: Colors.grey.shade800,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                headerStyle: const HeaderStyle(
+                  formatButtonVisible: true,
+                  titleTextStyle: CustomStyles.screenTitleTextStyle,
+                  leftChevronVisible: true,
+                  titleCentered: true,
+                ),
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 10, top: 10),
+            child: Text(
+              'Select your Shifts',
+              style: CustomStyles.sectionTitleTextStyle,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 15, right: 10),
+            child: SizedBox(
+              height: 350,
+              child: FutureBuilder(
+                future: DataRepo().listShiftUsers(),
+                builder: (context, snap) {
+                  if (snap.hasData &&
+                      snap.connectionState == ConnectionState.done) {
+                    var data = snap.data as Map;
+                    print(data);
+                    return ListView.builder(
+                      itemCount: data['data'].length,
+                      itemBuilder: (context, index) {
+                        var item = data['data'][index];
+                        return Container(
+                          height: 120,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(2, 2),
+                              )
+                            ],
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(),
+                                  decoration: BoxDecoration(
+                                    color: item['shiftStatus'] == "initial"
+                                        ? HexColor('#D2042D')
+                                        : Colors.green,
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "${item['shift']['shiftType']} Shift",
+                                          style: TextStyle(
+                                            fontSize: screenHeight / 50,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          DateFormat('dd MMM yyyy').format(
+                                              DateTime.parse(item['date'])),
+                                          style: TextStyle(
+                                            fontSize: screenHeight / 50,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        // Text(
+                                        //   item['shiftStatus'],
+                                        //   style: TextStyle(
+                                        //     fontSize:
+                                        //         screenHeight /
+                                        //             50,
+                                        //     fontWeight:
+                                        //         FontWeight.w500,
+                                        //     color: Colors.white,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Check In',
+                                      style: TextStyle(
+                                        fontSize: screenHeight / 50,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      item['shift']['startTime']
+                                          .substring(0, 5),
+                                      style: TextStyle(
+                                        fontSize: screenHeight / 45,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Check Out',
+                                      style: TextStyle(
+                                        fontSize: screenHeight / 50,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      item['shift']['endTime'].substring(0, 5),
+                                      style: TextStyle(
+                                        fontSize: screenHeight / 45,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),
