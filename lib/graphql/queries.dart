@@ -43,4 +43,26 @@ class GraphQLQueries {
      }
    }
  }''';
+
+  static const listShiftUsersDayQuery = '''
+ ${GqlFragments.CORE_SHIFT_FIELDS}
+ ${GqlFragments.CORE_USER_FIELDS}
+  query MyQuery(\$eq: ID, \$eq1: String) {
+   listShiftUsers(filter: {userId: {eq: \$eq}, date: {eq: \$eq1}}) {
+     items {
+       id
+       shiftStatus
+       date
+       checkIn
+       checkOut
+       isCheckedIn
+       shift {
+         ...CoreShiftFields
+       }
+       user {
+         ...CoreUserFields
+       }
+     }
+   }
+ }''';
 }

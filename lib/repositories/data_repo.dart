@@ -8,6 +8,7 @@ import 'package:shift_manager/graphql/queries.dart';
 class DataRepo {
   final awsDateFormat = DateFormat('yyyy-MM-dd');
   final awsTimeFormat = DateFormat('hh:mm:ss.sss');
+  final humanTimeFormat = DateFormat('hh:mm:ss a');
 
   fetchRequestItems(
       {required GraphQLOperation operation,
@@ -139,6 +140,22 @@ class DataRepo {
     return result;
   }
 
+  listShiftDayUsers(String userId, String date) async {
+    final operation = Amplify.API.query(
+      request: GraphQLRequest(
+        document: GraphQLQueries.listShiftUsersDayQuery,
+        variables: {
+          "eq": userId,
+          "eq1": date,
+        },
+        apiName: "shiftmanager",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "listShiftUsers");
+    return result;
+  }
+
   updateShiftUser(String id, String status) async {
     final operation = Amplify.API.mutate(
       request: GraphQLRequest(
@@ -146,6 +163,40 @@ class DataRepo {
         variables: {
           "id": id,
           "shiftStatus": status,
+        },
+        apiName: "shiftmanager-cognito",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "updateShiftUser", isMany: false);
+    return result;
+  }
+
+  updateShiftUserCheckIn(String id, String checkInTime) async {
+    final operation = Amplify.API.mutate(
+      request: GraphQLRequest(
+        document: GraphQLMutation.updateShiftUserCheckInMutation,
+        variables: {
+          "id": id,
+          "isCheckedIn": true,
+          "checkIn": checkInTime,
+        },
+        apiName: "shiftmanager-cognito",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "updateShiftUser", isMany: false);
+    return result;
+  }
+
+  updateShiftUserCheckOut(String id, String checkOutTime) async {
+    final operation = Amplify.API.mutate(
+      request: GraphQLRequest(
+        document: GraphQLMutation.updateShiftUserCheckOutMutation,
+        variables: {
+          "id": id,
+          "isCheckedIn": false,
+          "checkOut": checkOutTime,
         },
         apiName: "shiftmanager-cognito",
       ),

@@ -40,6 +40,9 @@ class GqlFragments {
         userId
         shiftId
         date
+        isCheckedIn
+        checkIn
+        checkOut
         status
   }''';
 

@@ -43,6 +43,9 @@ type ShiftUser @model @auth(rules: [
     userId: ID!
     date: AWSDate!
     shiftId: ID!
+    isCheckedIn: Boolean!
+    checkIn: AWSTime
+    checkOut: AWSTime
     shiftStatus: String!
     user: User @hasOne(fields: ["userId"])
     shift: Shift @hasOne(fields: ["shiftId"])

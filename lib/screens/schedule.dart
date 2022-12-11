@@ -40,28 +40,36 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Schedule'),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
-        backgroundColor: HexColor('#D2042D'),
-      ),
       backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 55, left: 10, bottom: 5),
+            child: Text(
+              'Schedule',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 26,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(15),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.red.shade50,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 20,
+                    offset: Offset(2, 2),
+                  )
+                ],
               ),
               child: TableCalendar(
                 focusedDay: _focusedDate,
@@ -106,7 +114,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             padding: EdgeInsets.only(left: 10, top: 10),
             child: Text(
               'Select your Shifts',
-              style: CustomStyles.sectionTitleTextStyle,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           Padding(

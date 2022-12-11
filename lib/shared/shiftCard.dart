@@ -63,7 +63,7 @@ Widget ShiftCard(String shiftStatus, String shiftType, String date,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Check In',
+                'Start',
                 style: TextStyle(
                   fontSize: screenHeight / 50,
                   fontWeight: FontWeight.w500,
@@ -87,7 +87,7 @@ Widget ShiftCard(String shiftStatus, String shiftType, String date,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Check Out',
+                'End',
                 style: TextStyle(
                   fontSize: screenHeight / 50,
                   fontWeight: FontWeight.w500,

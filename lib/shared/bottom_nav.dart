@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shift_manager/screens/schedule.dart';
 import 'package:shift_manager/screens/settings.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:shift_manager/screens/today.dart';
+
 import '../screens/home.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -13,18 +14,17 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  late PersistentTabController tabController;
   int currentIndex = 0;
 
   @override
   void initState() {
-    tabController = PersistentTabController(initialIndex: 0);
     super.initState();
   }
 
   final List<IconData> _navIcons = [
     Icons.home_rounded,
     Icons.calendar_month_rounded,
+    Icons.today_rounded,
     Icons.person_rounded,
   ];
 
@@ -50,6 +50,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ],
         ),
         child: ClipRRect(
+          clipBehavior: Clip.antiAlias,
           borderRadius: const BorderRadius.all(Radius.circular(40)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,10 +100,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: IndexedStack(
         index: currentIndex,
-        children: [
+        children: const [
           HomeScreen(),
-          const ScheduleScreen(),
-          const SettingsScreen(),
+          ScheduleScreen(),
+          TodayScreen(),
+          SettingsScreen(),
         ],
       ),
     );

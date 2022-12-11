@@ -19,4 +19,18 @@ class GraphQLMutation {
       id
     }
   }''';
+
+  static const updateShiftUserCheckInMutation = '''
+  mutation MyMutation(\$id: ID!, \$isCheckedIn: Boolean, \$checkIn: AWSTime) {
+    updateShiftUser(input: {id: \$id, isCheckedIn: \$isCheckedIn, checkIn: \$checkIn}) {
+      id
+    }
+  }''';
+
+  static const updateShiftUserCheckOutMutation = '''
+  mutation MyMutation(\$id: ID!, \$isCheckedIn: Boolean, \$checkOut: AWSTime) {
+    updateShiftUser(input: {id: \$id, isCheckedIn: \$isCheckedIn, checkOut: \$checkOut}) {
+      id
+    }
+  }''';
 }

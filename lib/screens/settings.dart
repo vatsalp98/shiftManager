@@ -1,11 +1,9 @@
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:shift_manager/routes.dart';
 
 import '../repositories/auth_repo.dart';
 import '../shared/const.dart';
-import '../shared/styles.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -17,30 +15,37 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final screenH = MediaQuery.of(context).size.height;
+    final screenW = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Settings'),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
-        backgroundColor: HexColor(
-            '#D2042D'),
-      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 8, left: 10, bottom: 10),
+              padding: EdgeInsets.only(top: 55, left: 10, bottom: 5),
+              child: Text(
+                'Settings',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 5, left: 10, bottom: 5),
               child: Text(
                 'User Information',
-                style: CustomStyles.screenTitleTextStyle,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             SizedBox(
@@ -52,6 +57,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       snapshot.hasData) {
                     var data = snapshot.data as Map;
                     return ListView(
+                      padding: EdgeInsets.zero,
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         ListTile(
                           leading: const Icon(Icons.person, size: 30),
@@ -59,13 +66,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             data['given_name'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: const Text(
                             'Given Name',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
@@ -75,13 +84,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             data['family_name'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: const Text(
                             'Family Name',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
@@ -91,7 +102,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             data['email'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: data['email_verified'] == "true"
@@ -99,12 +110,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   'Email Verified',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: Colors.grey,
                                   ),
                                 )
                               : const Text(
                                   'Unverified Email',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: Colors.grey,
                                   ),
                                 ),
                           trailing: data['email_verified'] == "true"
@@ -121,18 +136,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             data['custom:employeeid'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: const Text(
                             'Employee ID',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
                         ListTile(
-                          leading: const Icon(Icons.numbers, size: 30),
+                          leading: const Icon(Icons.map_rounded, size: 30),
                           title: Text(
                             data['custom:regionid'] ==
                                     Constants.DEFAULT_SURREY_REGION
@@ -140,13 +157,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 : "Others",
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: const Text(
                             'Region',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
@@ -157,13 +176,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             data['custom:role'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 18,
                             ),
                           ),
                           subtitle: const Text(
                             'Roles',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.grey,
                             ),
                           ),
                         ),
@@ -179,8 +200,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 5, left: 10, bottom: 0),
+              child: Text(
+                'Availability',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
               child: ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
