@@ -147,9 +147,10 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                     if (snap.hasData &&
                         snap.connectionState == ConnectionState.done) {
                       var data = snap.data as Map;
+
                       if (!data['empty']) {
                         return ListView.builder(
-                          itemCount: data['data'].length,
+                          itemCount: data.length,
                           itemBuilder: (context, index) {
                             var item = data['data'][index];
                             return ListTile(

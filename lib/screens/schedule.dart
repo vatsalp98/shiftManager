@@ -119,7 +119,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   if (snap.hasData &&
                       snap.connectionState == ConnectionState.done) {
                     var data = snap.data as Map;
-                    print(data);
+                    // print(data);
                     return ListView.builder(
                       itemCount: data['data'].length,
                       itemBuilder: (context, index) {

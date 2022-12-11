@@ -12,6 +12,7 @@
         "mode": "AMAZON_COGNITO_USER_POOLS",
         "cognitoUserPoolId": "authshiftmanagerauth"
       }
-    ]
+    ],
+    "conflictResolution": {}
   }
 }

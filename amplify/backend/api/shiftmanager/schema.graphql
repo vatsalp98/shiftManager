@@ -79,4 +79,5 @@ type Query {
     deleteCognitoUser(id: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name: "listingresolver-dev")
     getUserPoolCount: AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
     addUserToGroup(id: String!, group_name: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
+    sendShiftEmail(emailTo: String!, shiftDate: String!, shiftType: String!):AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
 }

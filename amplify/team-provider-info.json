@@ -15,18 +15,18 @@
       "auth": {
         "shiftmanagerauth": {}
       },
-      "api": {
-        "shiftmanager": {}
-      },
       "function": {
         "shiftmanagerdynamoWriter": {
           "deploymentBucketName": "amplify-shiftmanager-dev-231554-deployment",
-          "s3Key": "amplify-builds/shiftmanagerdynamoWriter-736e44584744576a7158-build.zip"
+          "s3Key": "amplify-builds/shiftmanagerdynamoWriter-69435832765745794859-build.zip"
         },
         "shiftmanagerusercount": {
           "deploymentBucketName": "amplify-shiftmanager-dev-231554-deployment",
           "s3Key": "amplify-builds/shiftmanagerusercount-6e4d514a456477566b4b-build.zip"
         }
+      },
+      "api": {
+        "shiftmanager": {}
       }
     }
   }

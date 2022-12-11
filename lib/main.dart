@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shift_manager/routes.dart';
 import 'package:shift_manager/shared/bottom_nav.dart';
 import 'package:shift_manager/shared/configure_amplify.dart';
 
@@ -102,6 +103,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        onGenerateRoute: RouteGenerator.generateRoute,
         builder: Authenticator.builder(),
         debugShowCheckedModeBanner: false,
         home: const BottomNavigation(),
