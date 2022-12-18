@@ -71,16 +71,14 @@ class DataRepo {
     }
   }
 
-  createAvailabilityUser(String userId, DateTime startTime, DateTime endTime,
-      DateTime date) async {
+  createAvailabilityUser(String userId, String type, DateTime date) async {
     final operation = Amplify.API.mutate(
       request: GraphQLRequest(
         document: GraphQLMutation.createAvailabilityUserMutation,
-        apiName: 'shiftmanager-cognito',
+        apiName: 'shiftmanager',
         variables: {
           "userId": userId,
-          "startTime": awsTimeFormat.format(startTime),
-          "endTime": awsTimeFormat.format(endTime),
+          "type": type,
           "date": awsDateFormat.format(date),
         },
       ),
@@ -92,14 +90,13 @@ class DataRepo {
     return result;
   }
 
-  listAvailabilityUser(String userId, String date) async {
-    print(userId);
-    print(date);
+  listAvailabilityUser(String date) async {
+    final user = await Amplify.Auth.getCurrentUser();
     final operation = Amplify.API.query(
       request: GraphQLRequest(
         document: GraphQLQueries.listAvailabilityByUser,
         variables: {
-          "eq": userId,
+          "eq": user.userId,
           "eq1": date,
         },
         apiName: 'shiftmanager',
@@ -116,7 +113,7 @@ class DataRepo {
         request: GraphQLRequest(
             document: GraphQLMutation.deleteAvailabilityUser,
             variables: {"id": id},
-            apiName: "shiftmanager-cognito"));
+            apiName: "shiftmanager"));
     final result = await fetchRequestItems(
         operation: operation,
         queryName: "deleteAvailabilityUser",
@@ -131,6 +128,42 @@ class DataRepo {
         document: GraphQLQueries.listShiftUsersQuery,
         variables: {
           "eq": user.userId,
+        },
+        apiName: "shiftmanager",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "listShiftUsers");
+    return result;
+  }
+
+  listPreviousShiftUsers() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final now = DateTime.now();
+    final operation = Amplify.API.query(
+      request: GraphQLRequest(
+        document: GraphQLQueries.listPreviousShiftUsersQuery,
+        variables: {
+          "eq": user.userId,
+          'lt': awsDateFormat.format(now),
+        },
+        apiName: "shiftmanager",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "listShiftUsers");
+    return result;
+  }
+
+  listUpcomingShiftUsers() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final now = DateTime.now();
+    final operation = Amplify.API.query(
+      request: GraphQLRequest(
+        document: GraphQLQueries.listUpcomingShiftUsersQuery,
+        variables: {
+          "eq": user.userId,
+          'gt': awsDateFormat.format(now),
         },
         apiName: "shiftmanager",
       ),
@@ -156,6 +189,24 @@ class DataRepo {
     return result;
   }
 
+  listShiftDaily() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final now = DateTime.now();
+    final operation = Amplify.API.query(
+      request: GraphQLRequest(
+        document: GraphQLQueries.listShiftUsersDayQuery,
+        variables: {
+          "eq": user.userId,
+          "eq1": awsDateFormat.format(now),
+        },
+        apiName: "shiftmanager",
+      ),
+    );
+    final result = await fetchRequestItems(
+        operation: operation, queryName: "listShiftUsers");
+    return result;
+  }
+
   updateShiftUser(String id, String status) async {
     final operation = Amplify.API.mutate(
       request: GraphQLRequest(
@@ -164,7 +215,7 @@ class DataRepo {
           "id": id,
           "shiftStatus": status,
         },
-        apiName: "shiftmanager-cognito",
+        apiName: "shiftmanager",
       ),
     );
     final result = await fetchRequestItems(
@@ -181,7 +232,7 @@ class DataRepo {
           "isCheckedIn": true,
           "checkIn": checkInTime,
         },
-        apiName: "shiftmanager-cognito",
+        apiName: "shiftmanager",
       ),
     );
     final result = await fetchRequestItems(
@@ -198,7 +249,7 @@ class DataRepo {
           "isCheckedIn": false,
           "checkOut": checkOutTime,
         },
-        apiName: "shiftmanager-cognito",
+        apiName: "shiftmanager",
       ),
     );
     final result = await fetchRequestItems(

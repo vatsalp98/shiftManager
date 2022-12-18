@@ -1,7 +1,7 @@
 class GraphQLMutation {
   static const createAvailabilityUserMutation = r'''
-  mutation MyMutation($date: AWSDate!, $endTime: AWSTime!, $startTime: AWSTime!, $userId: ID!) {
-    createAvailabilityUser(input: {date: $date, endTime: $endTime, startTime: $startTime, userId: $userId}){
+  mutation MyMutation($date: AWSDate!, $type: String!, $userId: ID!) {
+    createAvailabilityUser(input: {date: $date, type: $type, userId: $userId}){
       id
     }
   }''';

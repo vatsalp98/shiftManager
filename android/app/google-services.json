@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "601107234513",
+    "project_id": "shiftmanager-sns-notification",
+    "storage_bucket": "shiftmanager-sns-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601107234513:android:d7deb6558b5455b21f0ff0",
+        "android_client_info": {
+          "package_name": "com.apfly.shift_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601107234513-mp0du465m1fkhcqf1ihf8r995srod91b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcvCEvXN27XXnT6bF1_XelBEIP4fQzQqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601107234513-mp0du465m1fkhcqf1ihf8r995srod91b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

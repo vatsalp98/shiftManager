@@ -2,10 +2,11 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:shift_manager/shared/noShiftCard.dart';
+import 'package:shift_manager/shared/noUpcomingShiftCard.dart';
+import 'package:shift_manager/shared/shiftCard.dart';
 
 import '../repositories/data_repo.dart';
-import '../shared/noShiftCard.dart';
-import '../shared/shiftCard.dart';
 import '../shared/styles.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,16 +17,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  late Future<AuthUser> authFuture;
+  late Future todayShiftFuture;
+  late Future shiftListFuture;
+  late Future shiftListPast;
+
   @override
   void initState() {
     super.initState();
-  }
-
-  _fetchShifts() async {
-    final response = await DataRepo().listShiftUsers();
-    if (!response['errorsExists']) {
-      return response;
-    }
+    // _firebaseMessaging.getToken().then((token) => print(token));
+    authFuture = Amplify.Auth.getCurrentUser();
+    todayShiftFuture = DataRepo().listShiftDaily();
+    shiftListFuture = DataRepo().listUpcomingShiftUsers();
+    shiftListPast = DataRepo().listPreviousShiftUsers();
   }
 
   @override
@@ -34,8 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {});
+        onRefresh: () {
+          setState(() {
+            shiftListFuture = DataRepo().listUpcomingShiftUsers();
+            shiftListPast = DataRepo().listPreviousShiftUsers();
+          });
+          return shiftListFuture;
         },
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -63,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         FutureBuilder(
-                          future: Amplify.Auth.getCurrentUser(),
+                          future: authFuture,
                           builder: (context, snap) {
                             if (snap.hasData &&
                                 snap.connectionState == ConnectionState.done) {
@@ -111,304 +120,136 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, top: 15),
-                child: Container(
-                  height: screenHeight,
+                child: SizedBox(
+                  height: 160,
                   child: FutureBuilder(
-                    future: _fetchShifts(),
+                    future: todayShiftFuture,
                     builder: (context, snap) {
-                      if (snap.hasData &&
-                          snap.connectionState == ConnectionState.done) {
-                        var data = snap.data as Map;
-                        if (data['empty']) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              NoShiftCard(screenHeight),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 9.0, top: 30),
-                                child: Text(
-                                  'Upcoming Shifts',
-                                  style: TextStyle(
-                                    fontSize: screenHeight / 40,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 9.0, bottom: 50),
-                                child: Text(
-                                  '(Red Background = Unconfirmed, Green = Confirmed), Tap on a shift to Confirm or Cancel it',
-                                  style: TextStyle(
-                                    fontSize: screenHeight / 68,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: SvgPicture.asset(
-                                  'assets/svg/no_data.svg',
-                                  height: 100,
-                                  width: 100,
-                                ),
-                              ),
-                              Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Text(
-                                    'No Upcoming shifts Found!',
-                                    style: TextStyle(
-                                      fontSize: screenHeight / 45,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          for (var item in data['data']) {
-                            if (DateTime.parse(item['date']).day ==
-                                DateTime.now().day) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      if (item['shiftStatus'] == "initial") {
-                                        final response = await showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text('Confirm Shift'),
-                                              content: Text(
-                                                  'Are you sure you want to confirm this shit on ${item['date']} in the ${item['shift']['shiftType']} Shift from ${item['shift']['startTime'].substring(0, 5)} to ${item['shift']['endTime'].substring(0, 5)} ?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(
-                                                        context, false);
-                                                  },
-                                                  child: Text('Cancel'),
-                                                ),
-                                                ElevatedButton(
-                                                    onPressed: () async {
-                                                      final response =
-                                                          await DataRepo()
-                                                              .updateShiftUser(
-                                                                  item['id'],
-                                                                  'confirmed');
-                                                      print(response);
-                                                      if (!response[
-                                                          'errorsExists']) {
-                                                        Navigator.pop(
-                                                            context, true);
-                                                        setState(() {});
-                                                      }
-                                                    },
-                                                    child: Text('Confirm')),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                        response
-                                            ? ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Successfully Confirmed Shift!'),
-                                                  backgroundColor: Colors.green,
-                                                ),
-                                              )
-                                            : ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Cancelled, Shift Not Confirmed!'),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Already Confirmed Shift!'),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: ShiftCard(
-                                      item['shiftStatus'],
-                                      item['shift']['shiftType'],
-                                      item['date'],
-                                      item['shift']['startTime'],
-                                      item['shift']['endTime'],
-                                      screenHeight,
-                                      180,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 9.0, top: 30),
-                                    child: Text(
-                                      'Upcoming Shifts',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 40,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 9.0, bottom: 5),
-                                    child: Text(
-                                      '(Red Background = Unconfirmed, Green = Confirmed), Tap on a shift to Confirm or Cancel it',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 68,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 300,
-                                    child: ListView(
-                                      physics: const BouncingScrollPhysics(),
-                                      children: [
-                                        for (var item in data['data'])
-                                          ShiftCard(
-                                            item['shiftStatus'],
-                                            item['shift']['shiftType'],
-                                            item['date'],
-                                            item['shift']['startTime'],
-                                            item['shift']['endTime'],
-                                            screenHeight,
-                                            150,
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 170,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 10,
-                                          offset: Offset(2, 2),
-                                        )
-                                      ],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15)),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 10.0),
-                                              child: Text(
-                                                'You have no shifts today!',
-                                                style: TextStyle(
-                                                  fontSize: screenHeight / 45,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            ),
-                                            SvgPicture.asset(
-                                              'assets/svg/no_data.svg',
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 9.0, top: 30),
-                                    child: Text(
-                                      'Upcoming Shifts',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 40,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 9.0, bottom: 5),
-                                    child: Text(
-                                      '(Red Background = Unconfirmed, Green = Confirmed), Tap on a shift to Confirm or Cancel it',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 68,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 300,
-                                    child: ListView(
-                                      physics: const BouncingScrollPhysics(),
-                                      children: [
-                                        for (var item in data['data'])
-                                          ShiftCard(
-                                            item['shiftStatus'],
-                                            item['shift']['shiftType'],
-                                            item['date'],
-                                            item['shift']['startTime'],
-                                            item['shift']['endTime'],
-                                            screenHeight,
-                                            150,
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
+                      switch (snap.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.done:
+                        default:
+                          if (snap.hasError) {
+                            return Text('Error ${snap.error}');
+                          } else if (snap.hasData) {
+                            return snap.data['empty']
+                                ? NoShiftCard(screenHeight, 150)
+                                : ShiftCard(
+                                    snap.data['data'][0]['shiftStatus'],
+                                    snap.data['data'][0]['shift']['shiftType'],
+                                    snap.data['data'][0]['date'],
+                                    snap.data['data'][0]['shift']['startTime'],
+                                    snap.data['data'][0]['shift']['endTime'],
+                                    screenHeight,
+                                    150);
+                          } else {
+                            return const Text('No Data');
                           }
-                          return Container();
-                        }
-                      } else {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            CircularProgressIndicator(),
-                          ],
-                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 9.0, top: 25),
+                child: Text(
+                  "Upcoming Shifts",
+                  style: CustomStyles.screenTitleTextStyle,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, top: 15),
+                child: SizedBox(
+                  height: 160,
+                  child: FutureBuilder(
+                    future: shiftListFuture,
+                    builder: (context, snap) {
+                      switch (snap.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.done:
+                        default:
+                          if (snap.hasError) {
+                            return Text('Error ${snap.error}');
+                          } else if (snap.hasData) {
+                            return snap.data['empty']
+                                ? NoUpcomingShiftCard(screenHeight, 150)
+                                : ShiftCard(
+                                    snap.data['data'][0]['shiftStatus'],
+                                    snap.data['data'][0]['shift']['shiftType'],
+                                    snap.data['data'][0]['date'],
+                                    snap.data['data'][0]['shift']['startTime'],
+                                    snap.data['data'][0]['shift']['endTime'],
+                                    screenHeight,
+                                    150);
+                          } else {
+                            return const Text('No Data');
+                          }
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 9.0, top: 25),
+                child: Text(
+                  "Previous Shifts",
+                  style: CustomStyles.screenTitleTextStyle,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, top: 15),
+                child: SizedBox(
+                  height: 160,
+                  child: FutureBuilder(
+                    future: shiftListPast,
+                    builder: (context, snap) {
+                      switch (snap.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case ConnectionState.done:
+                        default:
+                          if (snap.hasError) {
+                            return Text('Error ${snap.error}');
+                          } else if (snap.hasData) {
+                            return snap.data['empty']
+                                ? NoUpcomingShiftCard(screenHeight, 150)
+                                : ListView(
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 5),
+                                    children: [
+                                      for (var item in snap.data['data'])
+                                        ListTile(
+                                          title: Text('Date: ${item['date']}'),
+                                          subtitle: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  'Status: ${item['shiftStatus']}'),
+                                              Text(
+                                                  'Type: ${item['shift']['shiftType']}')
+                                            ],
+                                          ),
+                                          leading: const Icon(
+                                            Icons.check_rounded,
+                                            size: 30,
+                                            color: Colors.green,
+                                          ),
+                                          isThreeLine: true,
+                                        ),
+                                    ],
+                                  );
+                          } else {
+                            return const Text('No Data');
+                          }
                       }
                     },
                   ),

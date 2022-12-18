@@ -4,13 +4,15 @@
     "apiName": "shiftmanager",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 7
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authshiftmanagerauth"
     },
     "additionalAuthTypes": [
       {
-        "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authshiftmanagerauth"
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-12-18T15:06:13.969Z",
+        "keyDescription": ""
       }
     ],
     "conflictResolution": {}

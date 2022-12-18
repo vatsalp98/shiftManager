@@ -10,6 +10,7 @@ import 'package:shift_manager/shared/configure_amplify.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  // await Firebase.initializeApp();
   await configureAmplify();
   runApp(
     EasyLocalization(

@@ -44,6 +44,46 @@ class GraphQLQueries {
    }
  }''';
 
+  static const listUpcomingShiftUsersQuery = '''
+  ${GqlFragments.CORE_SHIFT_FIELDS}
+ ${GqlFragments.CORE_USER_FIELDS}
+  query MyQuery(\$eq: ID, \$gt: String) {
+   listShiftUsers(filter: {userId: {eq: \$eq}, date: {gt: \$gt}}) {
+     items {
+       id
+       shiftStatus
+       date
+       shift {
+         ...CoreShiftFields
+       }
+       user {
+         ...CoreUserFields
+       }
+     }
+   }
+ }
+  ''';
+
+  static const listPreviousShiftUsersQuery = '''
+  ${GqlFragments.CORE_SHIFT_FIELDS}
+ ${GqlFragments.CORE_USER_FIELDS}
+  query MyQuery(\$eq: ID, \$lt: String) {
+   listShiftUsers(filter: {userId: {eq: \$eq}, date: {lt: \$lt}}) {
+     items {
+       id
+       shiftStatus
+       date
+       shift {
+         ...CoreShiftFields
+       }
+       user {
+         ...CoreUserFields
+       }
+     }
+   }
+ }
+  ''';
+
   static const listShiftUsersDayQuery = '''
  ${GqlFragments.CORE_SHIFT_FIELDS}
  ${GqlFragments.CORE_USER_FIELDS}

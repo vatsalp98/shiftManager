@@ -161,9 +161,7 @@ class _TodayScreenState extends State<TodayScreen> {
                                         ),
                                       ),
                                       Text(
-                                        data['data'][0]['checkIn']
-                                                .substring(0, 5) ??
-                                            "--/--",
+                                        data['data'][0]['checkIn'] ?? "--/--",
                                         style: TextStyle(
                                           fontSize: screenHeight / 45,
                                           fontWeight: FontWeight.w500,

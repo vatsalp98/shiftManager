@@ -50,8 +50,7 @@ class GqlFragments {
   fragment CoreAvailabilityUserFields on AvailabilityUser {
     id
     date
-    startTime
-    endTime
+    type
     userId
   }''';
 }
