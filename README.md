@@ -21,6 +21,19 @@ This is the list of the main tech stack used to build this software.
 6. AWS SES for email notifications of shift updates.
 
 ## Screenshots
+#### Flutter App Screenshots
+<table>
+  <tr>
+    <td>First Screen Page</td>
+     <td>Holiday Mention</td>
+     <td>Present day in purple and selected day in pink</td>
+  </tr>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413128-5bb9d2e9-feed-4060-90ad-40d0f0d2fa9b.jpg" width=270 height=480></td>
+    <td><img src="screenshots/Screenshot_1582745125.png" width=270 height=480></td>
+    <td><img src="screenshots/Screenshot_1582745139.png" width=270 height=480></td>
+  </tr>
+ </table>
 ![Screenshot_2022-12-12-13-58-14-66_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413128-5bb9d2e9-feed-4060-90ad-40d0f0d2fa9b.jpg)
 ![Screenshot_2022-12-12-13-57-41-23_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413135-20052af8-73ea-433a-a23f-9ed92c77d8ed.jpg)
 ![Screenshot_2022-12-12-13-57-44-74_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413138-618e1f55-7074-4c52-904c-408577b4751d.jpg)
