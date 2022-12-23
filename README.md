@@ -37,5 +37,11 @@ This is the list of the main tech stack used to build this software.
     <td><img src="https://user-images.githubusercontent.com/38806617/209413145-2b534599-a1bb-4a2b-8f29-0c18f17214ec.jpg" width=200 height=450></td>
     <td><img src="https://user-images.githubusercontent.com/38806617/209413147-039ce40d-5eaf-483d-a500-171d583e80b5.jpg" width=200 height=450></td>
   </tr>
+  <tr>
+    <td>Admin Panel</td>
+  </tr>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413651-389b295e-7808-4393-95fe-9483ae0adbdb.jpg"/> </td>
+  </tr>
  </table>
 
