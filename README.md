@@ -1,16 +1,21 @@
 # shift_manager
 
-App to manage employees work shift
+App to manage employees various shift scheduling.
+Helped a local Business reduce their cost of operations with precise shift booking leading to less last minute cancellation or delays.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This app has been built AWS AMPLIFY serverless backend.
+It is tied to a serverless architecture running also an admin panel helping managers view and assign shifts on the go with ease.
+Due to the serverless architecture it is perfect for small and growing companies who do not need to spend a lot of budget towards computing due to a small Dataset.
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies Used
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This is the list of the main tech stack used to build this software.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. AWS Cognito for Auth
+2. AWS DynamoDB for Data Storage
+3. AWS Lambda for serverless custom queries
+4. AWS AppSync (GraphQL API) for secure access to API with robustness
+5. Flutter Dart for cross platform capabilities targeting the employees of small businesses
+6. AWS SES for email notifications of shift updates.
