@@ -25,17 +25,17 @@ This is the list of the main tech stack used to build this software.
 <table>
   <tr>
     <td>AWS Auth Page</td>
-     <td>Home Page</td>
-     <td>Present day in purple and selected day in pink</td>
+     <td>Shift Day Page</td>
+     <td>Schedule Page</td>
+    <td>Home Page</td>
+    <td>Profile Page</td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/38806617/209413128-5bb9d2e9-feed-4060-90ad-40d0f0d2fa9b.jpg" width=270 height=480></td>
-    <td><img src="https://user-images.githubusercontent.com/38806617/209413135-20052af8-73ea-433a-a23f-9ed92c77d8ed.jpg" width=270 height=540></td>
-    <td><img src="https://user-images.githubusercontent.com/38806617/209413138-618e1f55-7074-4c52-904c-408577b4751d.jpg" width=270 height=540></td>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413128-5bb9d2e9-feed-4060-90ad-40d0f0d2fa9b.jpg" width=270 height=600></td>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413135-20052af8-73ea-433a-a23f-9ed92c77d8ed.jpg" width=270 height=600></td>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413138-618e1f55-7074-4c52-904c-408577b4751d.jpg" width=270 height=600></td>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413145-2b534599-a1bb-4a2b-8f29-0c18f17214ec.jpg" width=270 height=600></td>
+    <td><img src="https://user-images.githubusercontent.com/38806617/209413147-039ce40d-5eaf-483d-a500-171d583e80b5.jpg" width=270 height=600></td>
   </tr>
  </table>
-![Screenshot_2022-12-12-13-58-14-66_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413128-5bb9d2e9-feed-4060-90ad-40d0f0d2fa9b.jpg)
-![Screenshot_2022-12-12-13-57-41-23_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413135-20052af8-73ea-433a-a23f-9ed92c77d8ed.jpg)
-![Screenshot_2022-12-12-13-57-44-74_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413138-618e1f55-7074-4c52-904c-408577b4751d.jpg)
-![Screenshot_2022-12-12-13-57-47-87_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413145-2b534599-a1bb-4a2b-8f29-0c18f17214ec.jpg)
-![Screenshot_2022-12-12-13-57-51-91_55df9f9ef7ff28633f63535ec211d827](https://user-images.githubusercontent.com/38806617/209413147-039ce40d-5eaf-483d-a500-171d583e80b5.jpg)
+
