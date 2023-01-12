@@ -136,14 +136,85 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (snap.hasData) {
                             return snap.data['empty']
                                 ? NoShiftCard(screenHeight, 150)
-                                : ShiftCard(
-                                    snap.data['data'][0]['shiftStatus'],
-                                    snap.data['data'][0]['shift']['shiftType'],
-                                    snap.data['data'][0]['date'],
-                                    snap.data['data'][0]['shift']['startTime'],
-                                    snap.data['data'][0]['shift']['endTime'],
-                                    screenHeight,
-                                    150);
+                                : GestureDetector(
+                                    onTap: () async {
+                                      snap.data['data'][0]['shiftStatus'] ==
+                                              "initial"
+                                          ? await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                      "Confirm Shift"),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [],
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context, false);
+                                                        },
+                                                        child: const Text(
+                                                            'Cancel')),
+                                                    ElevatedButton(
+                                                        onPressed: () async {
+                                                          var result = await DataRepo()
+                                                              .updateShiftUser(
+                                                                  snap.data[
+                                                                          'data']
+                                                                      [0]['id'],
+                                                                  'confirmed');
+
+                                                          if (!result[
+                                                              'errorsExists']) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    const SnackBar(
+                                                              content: Text(
+                                                                  "Shift was confirmed."),
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                            ));
+                                                            Navigator.pop(
+                                                                context, true);
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    const SnackBar(
+                                                              content: Text(
+                                                                  "Shift was Not confirmed."),
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                            ));
+                                                            Navigator.pop(
+                                                                context, false);
+                                                          }
+                                                        },
+                                                        child:
+                                                            const Text('Save')),
+                                                  ],
+                                                );
+                                              })
+                                          : ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  "Shift has been confirmed already."),
+                                              backgroundColor: Colors.green,
+                                            ));
+                                    },
+                                    child: ShiftCard(
+                                        snap.data['data'][0]['shiftStatus'],
+                                        snap.data['data'][0]['shift']
+                                            ['shiftType'],
+                                        snap.data['data'][0]['date'],
+                                        screenHeight,
+                                        150),
+                                  );
                           } else {
                             return const Text('No Data');
                           }
@@ -177,14 +248,135 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (snap.hasData) {
                             return snap.data['empty']
                                 ? NoUpcomingShiftCard(screenHeight, 150)
-                                : ShiftCard(
-                                    snap.data['data'][0]['shiftStatus'],
-                                    snap.data['data'][0]['shift']['shiftType'],
-                                    snap.data['data'][0]['date'],
-                                    snap.data['data'][0]['shift']['startTime'],
-                                    snap.data['data'][0]['shift']['endTime'],
-                                    screenHeight,
-                                    150);
+                                : ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snap.data['data'].length,
+                                    itemBuilder: (context, index) {
+                                      var item = snap.data['data'][index];
+                                      return GestureDetector(
+                                        onTap: () async => {
+                                          item['shiftStatus'] == "initial"
+                                              ? await showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          "Confirm Shift"),
+                                                      content: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [],
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  false);
+                                                            },
+                                                            child: const Text(
+                                                                'Cancel')),
+                                                        ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              var result = await DataRepo()
+                                                                  .updateShiftUser(
+                                                                      snap.data['data']
+                                                                              [
+                                                                              0]
+                                                                          [
+                                                                          'id'],
+                                                                      'confirmed');
+
+                                                              if (!result[
+                                                                  'errorsExists']) {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        const SnackBar(
+                                                                  content: Text(
+                                                                      "Shift was confirmed."),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .green,
+                                                                ));
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    true);
+                                                              } else {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        const SnackBar(
+                                                                  content: Text(
+                                                                      "Shift was Not confirmed."),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .red,
+                                                                ));
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    false);
+                                                              }
+                                                            },
+                                                            child: const Text(
+                                                                'Save')),
+                                                      ],
+                                                    );
+                                                  })
+                                              : ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                  content: Text(
+                                                      "Shift has been confirmed already."),
+                                                  backgroundColor: Colors.green,
+                                                ))
+                                        },
+                                        child: ShiftCard(
+                                            item['shiftStatus'],
+                                            item['shift']['shiftType'],
+                                            item['date'],
+                                            screenHeight,
+                                            100),
+                                      );
+                                    },
+                                  );
+                            // : GestureDetector(
+                            //   onTap: () async {
+                            //
+                            //     var response = await showDialog(context: context, builder: (context) {
+                            //       return AlertDialog(
+                            //         title: Text("Confirm Shift"),
+                            //         content: Column(
+                            //           mainAxisSize: MainAxisSize.min,
+                            //           children: [],
+                            //         ),
+                            //         actions: [
+                            //           TextButton(onPressed: () {
+                            //             Navigator.pop(context, false);
+                            //           }, child: const Text('Cancel')),
+                            //           ElevatedButton(onPressed: () async {
+                            //             var result = await DataRepo().updateShiftUser(snap.data['data'][0]['id'], 'confirmed');
+                            //             print(result);
+                            //             if(!result['errorsExists']){
+                            //               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Shift was confirmed."), backgroundColor: Colors.green,));
+                            //               Navigator.pop(context, true);
+                            //             }
+                            //             else {
+                            //               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Shift was Not confirmed."), backgroundColor: Colors.red,));
+                            //               Navigator.pop(context, false);
+                            //             }
+                            //           }, child: const Text('Save')),
+                            //         ],
+                            //       );
+                            //     });
+                            //   },
+                            //   child: ShiftCard(
+                            //       snap.data['data'][0]['shiftStatus'],
+                            //       snap.data['data'][0]['shift']['shiftType'],
+                            //       snap.data['data'][0]['date'],
+                            //       screenHeight,
+                            //       150),
+                            // );
                           } else {
                             return const Text('No Data');
                           }

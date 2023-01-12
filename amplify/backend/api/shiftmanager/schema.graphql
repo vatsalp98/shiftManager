@@ -21,8 +21,6 @@ type Shift @model @auth(rules: [
   ]) {
     id: ID!
     date: AWSDate!
-    startTime: AWSTime!
-    endTime: AWSTime!
     isCancelled: Boolean!
     isRemote: Boolean!
     isNoShow: Boolean!
@@ -47,6 +45,7 @@ type ShiftUser @model @auth(rules: [
     checkIn: AWSTime
     checkOut: AWSTime
     shiftStatus: String!
+    userRole: String!
     user: User @hasOne(fields: ["userId"])
     shift: Shift @hasOne(fields: ["shiftId"])
 }
@@ -81,5 +80,5 @@ type Query {
     deleteCognitoUser(id: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name: "listingresolver-dev")
     getUserPoolCount: AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
     addUserToGroup(id: String!, group_name: String!):Boolean @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
-    sendShiftEmail(emailTo: String!, shiftDate: String!, shiftType: String!):AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
+    sendShiftEmail(emailTo: String!, shiftDate: String!, shiftType: String!, userRole: String!):AWSJSON @aws_api_key @aws_cognito_user_pools @function(name:"listingresolver-dev")
 }

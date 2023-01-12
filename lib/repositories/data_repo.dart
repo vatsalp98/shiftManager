@@ -121,13 +121,14 @@ class DataRepo {
     return result;
   }
 
-  listShiftUsers() async {
+  listShiftUsers(String date) async {
     final user = await Amplify.Auth.getCurrentUser();
     final operation = Amplify.API.query(
       request: GraphQLRequest(
         document: GraphQLQueries.listShiftUsersQuery,
         variables: {
           "eq": user.userId,
+          "eq1": date,
         },
         apiName: "shiftmanager",
       ),

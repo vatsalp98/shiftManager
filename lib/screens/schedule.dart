@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../repositories/data_repo.dart';
+import '../shared/shiftCard.dart';
 import '../shared/styles.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -23,11 +25,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   var availability = 'Time Interval';
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now();
+  late Future shiftListFuture;
 
   @override
   void initState() {
     tableFormat = CalendarFormat.twoWeeks;
     super.initState();
+    shiftListFuture = DataRepo()
+        .listShiftUsers(DataRepo().awsDateFormat.format(DateTime.now()));
   }
 
   @override
@@ -38,7 +43,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -81,7 +85,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     setState(() {
                       _selectedDate = selectedDay;
                       _focusedDate = focusedDay;
-                      //_events = _getEventsForDay(selectedDay);
+                      shiftListFuture = DataRepo().listShiftUsers(
+                          DataRepo().awsDateFormat.format(selectedDay));
                     });
                   }
                 }),
@@ -126,138 +131,49 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             child: SizedBox(
               height: 350,
               child: FutureBuilder(
-                future: DataRepo().listShiftUsers(),
+                future: shiftListFuture,
                 builder: (context, snap) {
                   if (snap.hasData &&
                       snap.connectionState == ConnectionState.done) {
                     var data = snap.data as Map;
-                    // print(data);
-                    return ListView.builder(
-                      itemCount: data['data'].length,
-                      itemBuilder: (context, index) {
-                        var item = data['data'][index];
-                        return Container(
-                          height: 120,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(2, 2),
-                              )
-                            ],
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(),
-                                  decoration: BoxDecoration(
-                                    color: item['shiftStatus'] == "initial"
-                                        ? HexColor('#D2042D')
-                                        : Colors.green,
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "${item['shift']['shiftType']} Shift",
-                                          style: TextStyle(
-                                            fontSize: screenHeight / 50,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Text(
-                                          DateFormat('dd MMM yyyy').format(
-                                              DateTime.parse(item['date'])),
-                                          style: TextStyle(
-                                            fontSize: screenHeight / 50,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        // Text(
-                                        //   item['shiftStatus'],
-                                        //   style: TextStyle(
-                                        //     fontSize:
-                                        //         screenHeight /
-                                        //             50,
-                                        //     fontWeight:
-                                        //         FontWeight.w500,
-                                        //     color: Colors.white,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
+                    if (!data['empty']) {
+                      return ListView.builder(
+                          itemCount: data['data'].length,
+                          itemBuilder: (context, index) {
+                            var item = data['data'][index];
+                            return ShiftCard(
+                                item['shiftStatus'],
+                                item['shift']['shiftType'],
+                                item['date'],
+                                screenHeight,
+                                100);
+                          });
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/no_data.svg',
+                              height: 250,
+                              width: 250,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Text(
+                                'No Shifts found for this day.',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Check In',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 50,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      item['shift']['startTime']
-                                          .substring(0, 5),
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 45,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Check Out',
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 50,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      item['shift']['endTime'].substring(0, 5),
-                                      style: TextStyle(
-                                        fontSize: screenHeight / 45,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(

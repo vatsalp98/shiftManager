@@ -18,8 +18,6 @@ class GqlFragments {
   fragment CoreShiftFields on Shift {
         id
         date
-        startTime
-        endTime
         isCancelled
         isRemote
         isNoShow
@@ -43,6 +41,7 @@ class GqlFragments {
         isCheckedIn
         checkIn
         checkOut
+        userRole
         status
   }''';
 
