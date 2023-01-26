@@ -77,13 +77,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (snap.hasData &&
                                 snap.connectionState == ConnectionState.done) {
                               var data = snap.data;
-                              return Text(
-                                data!.username,
-                                style: TextStyle(
-                                  fontSize: screenHeight / 55,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                ),
+                              return Column(
+                                children: [
+                                  Text(
+                                    data!.username,
+                                    style: TextStyle(
+                                      fontSize: screenHeight / 55,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               );
                             } else {
                               return const CircularProgressIndicator();

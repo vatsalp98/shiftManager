@@ -1,4 +1,6 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:shift_manager/routes.dart';
 
@@ -15,9 +17,15 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenH = MediaQuery.of(context).size.height;
-    final screenW = MediaQuery.of(context).size.width;
+    // final screenH = MediaQuery.of(context).size.height;
+    // final screenW = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Amplify.Auth.signOut();
+        },
+        child: const Icon(Icons.logout_rounded),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -234,9 +242,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
-            const Center(
-              child: SignOutButton(),
-            ),
           ],
         ),
       ),

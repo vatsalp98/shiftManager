@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
     return Authenticator(
       authenticatorBuilder: (BuildContext context, AuthenticatorState state) {
         const padding =
-            EdgeInsets.only(left: 16, right: 16, top: 38, bottom: 28);
+            EdgeInsets.only(left: 16, right: 16, top: 78, bottom: 28);
         switch (state.currentStep) {
           case AuthenticatorStep.signIn:
             return Scaffold(
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
                       // Insert Logo here
                       Center(
                         child: Image.asset(
-                          'assets/shift-logo.png',
+                          'assets/logo2.png',
                           height: 150,
                         ),
                       ),
@@ -57,6 +57,46 @@ class MyApp extends StatelessWidget {
                         ),
                       ),
                       SignInForm(),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          case AuthenticatorStep.resetPassword:
+            return Scaffold(
+              body: Padding(
+                padding: padding,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Insert Logo here
+                      Center(
+                        child: Image.asset(
+                          'assets/logo2.png',
+                          height: 150,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 25),
+                        child: Text(
+                          'Shift Manager',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0, left: 5),
+                        child: Text(
+                          'Enter email address linked to the account to start changing your password.',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      ResetPasswordForm(),
                     ],
                   ),
                 ),
