@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:intl/intl.dart';
 
 Widget ShiftCard(String shiftStatus, String shiftType, String date,
     double screenHeight, double cardHeight) {

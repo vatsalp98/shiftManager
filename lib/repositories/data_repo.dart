@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shift_manager/graphql/mutation.dart';
 import 'package:shift_manager/graphql/queries.dart';
 

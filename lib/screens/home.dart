@@ -1,11 +1,10 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:shift_manager/shared/noShiftCard.dart';
 import 'package:shift_manager/shared/noUpcomingShift_card.dart';
 import 'package:shift_manager/shared/shift_card.dart';
-
 import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
 
