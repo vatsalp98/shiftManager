@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shift_manager/shared/noShiftCard.dart';
-import 'package:shift_manager/shared/noUpcomingShiftCard.dart';
-import 'package:shift_manager/shared/shiftCard.dart';
+import 'package:shift_manager/shared/noUpcomingShift_card.dart';
+import 'package:shift_manager/shared/shift_card.dart';
 
 import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () {
@@ -153,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   content: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
-                                                    children: [],
                                                   ),
                                                   actions: [
                                                     TextButton(
@@ -269,7 +268,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       content: Column(
                                                         mainAxisSize:
                                                             MainAxisSize.min,
-                                                        children: [],
                                                       ),
                                                       actions: [
                                                         TextButton(

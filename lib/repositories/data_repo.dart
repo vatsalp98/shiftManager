@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shift_manager/graphql/mutation.dart';
@@ -104,7 +103,7 @@ class DataRepo {
     );
     final result = await fetchRequestItems(
         operation: operation, queryName: "listAvailabilityUsers");
-    print(result);
+    // print(result);
     return result;
   }
 

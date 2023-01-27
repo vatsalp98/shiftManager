@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class GqlFragments {
   static const CORE_USER_FIELDS = r'''
   fragment CoreUserFields on User {

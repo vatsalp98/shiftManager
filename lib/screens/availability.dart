@@ -211,27 +211,25 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                         );
                       } else {
                         return Center(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: SvgPicture.asset(
-                                    'assets/svg/no_data.svg',
-                                    height: 75,
-                                    width: 75,
-                                  ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: SvgPicture.asset(
+                                  'assets/svg/no_data.svg',
+                                  height: 75,
+                                  width: 75,
                                 ),
-                                const Text(
-                                  'No Data',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              ),
+                              const Text(
+                                'No Data',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         );
                       }

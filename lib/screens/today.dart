@@ -2,7 +2,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shift_manager/shared/shiftCard.dart';
+import 'package:shift_manager/shared/shift_card.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 import '../repositories/data_repo.dart';
@@ -27,7 +27,7 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Column(
@@ -81,7 +81,7 @@ class _TodayScreenState extends State<TodayScreen> {
                             alignment: Alignment.centerLeft,
                             child: RichText(
                               text: TextSpan(
-                                  text: DateTime.now().day.toString() + " ",
+                                  text: "${DateTime.now().day} ",
                                   style: TextStyle(
                                     fontSize: screenHeight / 35,
                                     fontWeight: FontWeight.w500,
@@ -266,7 +266,7 @@ class _TodayScreenState extends State<TodayScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.check_circle_rounded,
                                         color: Colors.green,
                                         size: 35,
@@ -289,41 +289,39 @@ class _TodayScreenState extends State<TodayScreen> {
                     return Padding(
                       padding: EdgeInsets.only(top: screenHeight / 5),
                       child: Center(
-                        child: Container(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 15.0),
-                                child: SvgPicture.asset(
-                                  'assets/svg/no_data.svg',
-                                  height: 250,
-                                  width: 250,
-                                ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              child: SvgPicture.asset(
+                                'assets/svg/no_data.svg',
+                                height: 250,
+                                width: 250,
                               ),
-                              Text(
-                                'No Shift Assigned for the Day',
-                                style: TextStyle(
-                                  fontSize: screenHeight / 45,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
+                            ),
+                            Text(
+                              'No Shift Assigned for the Day',
+                              style: TextStyle(
+                                fontSize: screenHeight / 45,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
                               ),
-                              Text(
-                                'Enjoy your free day!',
-                                style: TextStyle(
-                                  fontSize: screenHeight / 45,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            Text(
+                              'Enjoy your free day!',
+                              style: TextStyle(
+                                fontSize: screenHeight / 45,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     );
                   }
                 } else {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }

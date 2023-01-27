@@ -39,7 +39,7 @@ flutter:
   assets:
     - assets/
     - assets/languages/
-    - assets/font/
+    - assets/fonts/
     - assets/svg/
 
   fonts:

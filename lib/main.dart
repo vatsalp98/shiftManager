@@ -86,8 +86,8 @@ class MyApp extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0, left: 5),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 15.0, left: 5),
                         child: Text(
                           'Enter email address linked to the account to start changing your password.',
                           style: TextStyle(
