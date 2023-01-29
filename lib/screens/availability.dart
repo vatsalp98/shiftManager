@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
 
@@ -36,15 +35,6 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
         .listAvailabilityUser(DataRepo().awsDateFormat.format(_selectedDate));
   }
 
-  // fetchEvents() async {
-  //   final user = await Amplify.Auth.getCurrentUser();
-  //   final response = await DataRepo().listAvailabilityUser(
-  //       user.userId, DataRepo().awsDateFormat.format(_selectedDate));
-  //   if (!response['errorsExists']) {
-  //     return response;
-  //   }
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -52,6 +42,8 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -319,38 +311,6 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                 ],
               ),
             ),
-            // ListTile(
-            //   title: Text(
-            //     availability,
-            //     style: const TextStyle(
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            //   subtitle: const Text(
-            //     'Start Time',
-            //     style: TextStyle(
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            //   trailing: IconButton(
-            //     onPressed: () async {
-            //       TimeRange result =
-            //           await showTimeRangePicker(context: context);
-            //       setState(() {
-            //         availability =
-            //             "From: ${result.startTime.hour}:${result.startTime.minute} TO ${result.endTime.hour}:${result.endTime.minute}";
-            //         startTime = DateTime(now.year, now.month, now.day,
-            //             result.startTime.hour, result.startTime.minute);
-            //         endTime = DateTime(now.year, now.month, now.day,
-            //             result.endTime.hour, result.endTime.minute);
-            //       });
-            //     },
-            //     icon: const Icon(
-            //       Icons.punch_clock_rounded,
-            //       color: Colors.redAccent,
-            //     ),
-            //   ),
-            // ),
             const Padding(
               padding: EdgeInsets.only(top: 45),
             ),
@@ -360,9 +320,15 @@ class _AvailabilityScreenState extends State<AvailabilityScreen> {
                     var user = await Amplify.Auth.getCurrentUser();
                     var response = await DataRepo().createAvailabilityUser(
                         user.userId, _am ? "AM" : "PM", _selectedDate);
-                    if (!response['errorsExists'] && !response['empty']) {
-                      Navigator.pop(context);
+                    if (response['errorsExists'] || response['empty']) {
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(response['error']),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                     }
+                    navigator.pop();
                   },
                   child: const Text('Save')),
             ),

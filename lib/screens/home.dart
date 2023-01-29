@@ -2,8 +2,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shift_manager/shared/noShiftCard.dart';
-import 'package:shift_manager/shared/noUpcomingShift_card.dart';
+import 'package:shift_manager/shared/no_shift_card.dart';
+import 'package:shift_manager/shared/no_upcoming_shift_card.dart';
 import 'package:shift_manager/shared/shift_card.dart';
 import '../repositories/data_repo.dart';
 import '../shared/styles.dart';
@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   late Future<AuthUser> authFuture;
   late Future todayShiftFuture;
   late Future shiftListFuture;
@@ -36,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     // final screenWidth = MediaQuery.of(context).size.width;
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () {
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Text('Error ${snap.error}');
                           } else if (snap.hasData) {
                             return snap.data['empty']
-                                ? NoShiftCard(screenHeight, 150)
+                                ? noShiftCard(screenHeight, 150)
                                 : GestureDetector(
                                     onTap: () async {
                                       snap.data['data'][0]['shiftStatus'] ==
@@ -172,29 +173,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                                           if (!result[
                                                               'errorsExists']) {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    const SnackBar(
+                                                            messenger.showSnackBar(
+                                                                const SnackBar(
                                                               content: Text(
                                                                   "Shift was confirmed."),
                                                               backgroundColor:
                                                                   Colors.green,
                                                             ));
-                                                            Navigator.pop(
-                                                                context, true);
+                                                            navigator.pop(true);
                                                           } else {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                                    const SnackBar(
+                                                            messenger.showSnackBar(
+                                                                const SnackBar(
                                                               content: Text(
                                                                   "Shift was Not confirmed."),
                                                               backgroundColor:
                                                                   Colors.red,
                                                             ));
-                                                            Navigator.pop(
-                                                                context, false);
+                                                            navigator
+                                                                .pop(false);
                                                           }
                                                         },
                                                         child:
@@ -209,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               backgroundColor: Colors.green,
                                             ));
                                     },
-                                    child: ShiftCard(
+                                    child: shiftCard(
                                         snap.data['data'][0]['shiftStatus'],
                                         snap.data['data'][0]['shift']
                                             ['shiftType'],
@@ -249,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Text('Error ${snap.error}');
                           } else if (snap.hasData) {
                             return snap.data['empty']
-                                ? NoUpcomingShiftCard(screenHeight, 150)
+                                ? noUpcomingShiftCard(screenHeight, 150)
                                 : ListView.builder(
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: snap.data['data'].length,
@@ -291,8 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                                               if (!result[
                                                                   'errorsExists']) {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
+                                                                messenger
                                                                     .showSnackBar(
                                                                         const SnackBar(
                                                                   content: Text(
@@ -301,12 +296,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       Colors
                                                                           .green,
                                                                 ));
-                                                                Navigator.pop(
-                                                                    context,
-                                                                    true);
+                                                                navigator
+                                                                    .pop(true);
                                                               } else {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
+                                                                messenger
                                                                     .showSnackBar(
                                                                         const SnackBar(
                                                                   content: Text(
@@ -315,9 +308,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       Colors
                                                                           .red,
                                                                 ));
-                                                                Navigator.pop(
-                                                                    context,
-                                                                    false);
+                                                                navigator
+                                                                    .pop(false);
                                                               }
                                                             },
                                                             child: const Text(
@@ -325,14 +317,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ],
                                                     );
                                                   })
-                                              : ScaffoldMessenger.of(context)
+                                              : messenger
                                                   .showSnackBar(const SnackBar(
                                                   content: Text(
                                                       "Shift has been confirmed already."),
                                                   backgroundColor: Colors.green,
                                                 ))
                                         },
-                                        child: ShiftCard(
+                                        child: shiftCard(
                                             item['shiftStatus'],
                                             item['shift']['shiftType'],
                                             item['date'],
@@ -410,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return Text('Error ${snap.error}');
                           } else if (snap.hasData) {
                             return snap.data['empty']
-                                ? NoUpcomingShiftCard(screenHeight, 150)
+                                ? noUpcomingShiftCard(screenHeight, 150)
                                 : ListView(
                                     physics: const BouncingScrollPhysics(),
                                     padding: const EdgeInsets.symmetric(

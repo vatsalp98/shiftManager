@@ -138,7 +138,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           itemCount: data['data'].length,
                           itemBuilder: (context, index) {
                             var item = data['data'][index];
-                            return ShiftCard(
+                            return shiftCard(
                                 item['shiftStatus'],
                                 item['shift']['shiftType'],
                                 item['date'],

@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-Widget ShiftCard(String shiftStatus, String shiftType, String date,
+Widget shiftCard(String shiftStatus, String shiftType, String date,
     double screenHeight, double cardHeight) {
   return Container(
     height: cardHeight,

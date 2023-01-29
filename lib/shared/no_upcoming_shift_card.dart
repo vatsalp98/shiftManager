@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-Widget NoShiftCard(double screenHeight, double cardHeight) {
+Widget noUpcomingShiftCard(double screenHeight, double cardHeight) {
   return Container(
     height: cardHeight,
     decoration: const BoxDecoration(
       color: Colors.white,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black26,
-          blurRadius: 10,
-          offset: Offset(2, 2),
-        )
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: Colors.black26,
+      //     blurRadius: 10,
+      //     offset: Offset(2, 2),
+      //   )
+      // ],
       borderRadius: BorderRadius.all(Radius.circular(15)),
     ),
     child: Row(
@@ -27,7 +27,7 @@ Widget NoShiftCard(double screenHeight, double cardHeight) {
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Text(
-                'You have no shifts today!',
+                'You have no upcoming shifts!',
                 style: TextStyle(
                   fontSize: screenHeight / 45,
                   fontWeight: FontWeight.w500,

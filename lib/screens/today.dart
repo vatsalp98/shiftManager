@@ -68,7 +68,7 @@ class _TodayScreenState extends State<TodayScreen> {
                   if (!data['empty']) {
                     return Column(
                       children: [
-                        ShiftCard(
+                        shiftCard(
                           data['data'][0]['shiftStatus'],
                           data['data'][0]['shift']['shiftType'],
                           data['data'][0]['date'],
